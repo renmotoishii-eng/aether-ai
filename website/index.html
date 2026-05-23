@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETHER AI — AI Automation Suite for E-Commerce</title>
+  <meta name="description" content="Replace product photography studios, customer service teams, and content agencies with one subscription. AI-powered automation for e-commerce.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       RESET & BASE
+    ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #111118;
+      --bg-elevated: #16161f;
+      --bg-hover: #1c1c2a;
+      --text: #e8e8f0;
+      --text-secondary: #9898b0;
+      --text-muted: #6a6a82;
+      --purple: #6c5ce7;
+      --purple-light: #8b7cf0;
+      --purple-glow: rgba(108, 92, 231, 0.15);
+      --teal: #00cec9;
+      --teal-light: #55efc4;
+      --teal-glow: rgba(0, 206, 201, 0.12);
+      --border: #1e1e30;
+      --border-light: #2a2a45;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --max-width: 1200px;
+      --nav-height: 72px;
+      --gradient: linear-gradient(135deg, var(--purple), var(--teal));
+      --gradient-text: linear-gradient(135deg, var(--purple-light), var(--teal-light));
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    ul { list-style: none; }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple-light);
+      margin-bottom: 12px;
+      background: var(--purple-glow);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(108, 92, 231, 0.2);
+    }
+
+    .section-title {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    /* ============================================
+       SCROLL REVEAL
+    ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ============================================
+       BUTTONS
+    ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(108, 92, 231, 0.45);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--purple);
+      background: rgba(108, 92, 231, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 10px 22px;
+      font-size: 0.85rem;
+    }
+
+    /* ============================================
+       NAV
+    ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      height: var(--nav-height);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-logo span {
+      font-weight: 300;
+      -webkit-text-fill-color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-ctas {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-login {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      transition: color 0.2s;
+    }
+
+    .nav-login:hover { color: var(--text); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 999;
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover { color: var(--text); }
+
+    .mobile-menu .btn {
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    /* ============================================
+       HERO
+    ============================================ */
+    .hero {
+      padding: 140px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .hero-bg-glow-1 {
+      background: var(--purple);
+      top: -200px;
+      left: -200px;
+    }
+
+    .hero-bg-glow-2 {
+      background: var(--teal);
+      bottom: -200px;
+      right: -200px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--teal-light);
+      background: rgba(0, 206, 201, 0.1);
+      border: 1px solid rgba(0, 206, 201, 0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .gradient-text {
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+
+    /* Metric badges */
+    .hero-metrics {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metric-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 22px;
+      transition: all 0.3s ease;
+    }
+
+    .metric-badge:hover {
+      border-color: var(--purple);
+      background: var(--bg-hover);
+      transform: translateY(-2px);
+    }
+
+    .metric-badge .metric-icon {
+      font-size: 1.3rem;
+    }
+
+    .metric-badge .metric-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .metric-badge .metric-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* ============================================
+       PRODUCT CARDS
+    ============================================ */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .product-card:hover::before { opacity: 1; }
+
+    .product-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .product-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .product-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .product-card p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .product-card ul {
+      margin-bottom: 24px;
+    }
+
+    .product-card ul li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .product-card ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .product-card .learn-more {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--purple-light);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+
+    .product-card .learn-more:hover { gap: 10px; }
+
+    /* ============================================
+       HOW IT WORKS
+    ============================================ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 48px;
+      left: 16%;
+      right: 16%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--teal), transparent);
+      opacity: 0.3;
+    }
+
+    .step-card {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .step-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      max-width: 320px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       PRICING
+    ============================================ */
+    .pricing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .pricing-toggle span {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .pricing-toggle span.active { color: var(--text); }
+
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      background: var(--border-light);
+      border-radius: 13px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.active { background: var(--purple); }
+
+    .toggle-switch .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.active .toggle-knob { transform: translateX(22px); }
+
+    .toggle-save {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--teal);
+      background: rgba(0, 206, 201, 0.1);
+      padding: 3px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 206, 201, 0.2);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      position: relative;
+      transition: all 0.35s ease;
+    }
+
+    .pricing-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+    }
+
+    .pricing-card.featured {
+      border-color: var(--purple);
+      background: linear-gradient(135deg, rgba(108, 92, 231, 0.05), rgba(0, 206, 201, 0.03));
+      transform: scale(1.03);
+    }
+
+    .pricing-card.featured:hover {
+      transform: scale(1.03) translateY(-4px);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 6px 18px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pricing-card .tier-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .pricing-card .price {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .pricing-card .price-period {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .pricing-card .price-annual {
+      display: none;
+      font-size: 0.8rem;
+      color: var(--teal);
+      margin-bottom: 24px;
+    }
+
+    .pricing-card .price-annual.show { display: block; }
+
+    .pricing-features {
+      margin-bottom: 28px;
+    }
+
+    .pricing-features li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .pricing-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ============================================
+       TESTIMONIALS
+    ============================================ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      border-color: var(--border-light);
+      transform: translateY(-4px);
+    }
+
+    .testimonial-stars {
+      color: #f1c40f;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-quote {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .testimonial-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .testimonial-role {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* ============================================
+       FAQ
+    ============================================ */
+    .faq-list {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.2s;
+    }
+
+    .faq-question:hover { color: var(--purple-light); }
+
+    .faq-question .faq-icon {
+      font-size: 1.3rem;
+      transition: transform 0.3s ease;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+
+    .faq-answer-inner {
+      padding-bottom: 22px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    .footer {
+      padding: 60px 0 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 300px;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .footer-logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-col h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      padding: 5px 0;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--text); }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.25s ease;
+      padding: 0;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--purple);
+      background: rgba(108, 92, 231, 0.1);
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover { color: var(--text-secondary); }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 1024px) {
+      .product-grid,
+      .pricing-grid,
+      .testimonials-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pricing-card.featured { transform: none; }
+      .pricing-card.featured:hover { transform: translateY(-4px); }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links,
+      .nav-ctas .nav-login,
+      .nav-ctas .btn { display: none; }
+
+      .hamburger { display: flex; }
+
+      .hero h1 { font-size: 2.5rem; }
+      .hero p { font-size: 1rem; }
+
+      .section { padding: 64px 0; }
+      .section-title { font-size: 2rem; }
+
+      .product-grid,
+      .pricing-grid,
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .steps-grid::before { display: none; }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero { min-height: auto; padding: 120px 0 60px; }
+
+      .metrics-badges { gap: 8px; }
+      .metric-badge { padding: 10px 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2rem; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .hero-ctas .btn { width: 100%; justify-content: center; }
+      .metric-badge { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       NAVIGATION
+  ========================================== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">AETHER <span>AI</span></a>
+
+      <div class="nav-links">
+        <a href="#visuals">Visuals</a>
+        <a href="#agents">Agents</a>
+        <a href="#content">Content</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+
+      <div class="nav-ctas">
+        <a href="#" class="nav-login">Log In</a>
+        <a href="#pricing" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+    <a href="#visuals">Visuals</a>
+    <a href="#agents">Agents</a>
+    <a href="#content">Content</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#" class="nav-login" style="border:none;">Log In</a>
+    <a href="#pricing" class="btn btn-primary">Get Started</a>
+  </div>
+
+  <!-- ==========================================
+       HERO
+  ========================================== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-glow hero-bg-glow-1"></div>
+    <div class="hero-bg-glow hero-bg-glow-2"></div>
+
+    <div class="container hero-content">
+      <div class="hero-badge reveal">
+        <span>✦</span> Now available for Shopify & WooCommerce
+      </div>
+
+      <h1 class="reveal reveal-delay-1">
+        AI Automation Suite<br>
+        for <span class="gradient-text">E-Commerce</span>
+      </h1>
+
+      <p class="reveal reveal-delay-2">
+        Replace product photography studios, customer service teams, and content agencies with one subscription.
+      </p>
+
+      <div class="hero-ctas reveal reveal-delay-3">
+        <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
+        <a href="#" class="btn btn-secondary">See Demo →</a>
+      </div>
+
+      <div class="hero-metrics reveal reveal-delay-4">
+        <div class="metric-badge">
+          <span class="metric-icon">📉</span>
+          <div>
+            <div class="metric-value">60-80%</div>
+            <div class="metric-label">Cost Reduction</div>
+          </div>
+        </div>
+        <div class="metric-badge">
+          <span class="metric-icon">📈</span>
+          <div>
+            <div class="metric-value">87%</div>
+            <div class="metric-label">Revenue Uplift</div>
+          </div>
+        </div>
+        <div class="metric-badge">
+          <span class="metric-icon">⚡</span>
+          <div>
+            <div class="metric-value">24/7</div>
+            <div class="metric-label">AI Agents</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PRODUCT CARDS
+  ========================================== -->
+  <section class="section" id="visuals">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Products</span>
+        <h2 class="section-title">Your Entire E-Commerce Engine</h2>
+        <p class="section-subtitle">Three powerful AI-driven modules working in concert to automate every surface of your store.</p>
+      </div>
+
+      <div class="product-grid">
+
+        <div class="product-card reveal reveal-delay-1">
+          <div class="product-card-icon">🎨</div>
+          <h3>Visuals</h3>
+          <p>Generate studio-quality product photography, lifestyle images, and video ads — no photoshoot required.</p>
+          <ul>
+            <li>AI product photography in 120+ styles</li>
+            <li>Background removal & scene generation</li>
+            <li>Automated A+ content for Amazon</li>
+            <li>Batch processing for entire catalogs</li>
+          </ul>
+          <a href="#" class="learn-more">Learn more →</a>
+        </div>
+
+        <div class="product-card reveal reveal-delay-2">
+          <div class="product-card-icon">🤖</div>
+          <h3>Agents</h3>
+          <p>Deploy AI customer service agents that know your catalog, handle returns, and upsell autonomously.</p>
+          <ul>
+            <li>24/7 multilingual customer support</li>
+            <li>Order tracking & return automation</li>
+            <li>Smart upsell & cross-sell engine</li>
+            <li>Seamless Shopify / WooCommerce sync</li>
+          </ul>
+          <a href="#" class="learn-more">Learn more →</a>
+        </div>
+
+        <div class="product-card reveal reveal-delay-3">
+          <div class="product-card-icon">📝</div>
+          <h3>Content</h3>
+          <p>Generate SEO-optimized product descriptions, blog posts, email campaigns, and social content at scale.</p>
+          <ul>
+            <li>SEO-optimized product descriptions</li>
+            <li>Multi-channel content syndication</li>
+            <li>AI blog posts & buying guides</li>
+            <li>Email & social campaign generation</li>
+          </ul>
+          <a href="#" class="learn-more">Learn more →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       HOW IT WORKS
+  ========================================== -->
+  <section class="section" id="agents" style="background: radial-gradient(ellipse at 50% 0%, rgba(108,92,231,0.04), transparent 60%);">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">How It Works</span>
+        <h2 class="section-title">From Setup to Scale in Minutes</h2>
+        <p class="section-subtitle">No technical expertise required. Connect your store and let AI do the heavy lifting.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card reveal reveal-delay-1">
+          <div class="step-number">1</div>
+          <h3>Connect Your Store</h3>
+          <p>One-click integration with Shopify, WooCommerce, or BigCommerce. Your products, categories, and brand assets sync automatically.</p>
+        </div>
+
+        <div class="step-card reveal reveal-delay-2">
+          <div class="step-number">2</div>
+          <h3>AI Generates Your Catalog</h3>
+          <p>Our AI processes every SKU — generating product images, descriptions, and support flows tailored to your brand voice.</p>
+        </div>
+
+        <div class="step-card reveal reveal-delay-3">
+          <div class="step-number">3</div>
+          <h3>Publish Everywhere</h3>
+          <p>Deploy across your store, marketplaces, social channels, and ad platforms. Updates propagate in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       PRICING
+  ========================================== -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Pricing</span>
+        <h2 class="section-title">Simple, Transparent Pricing</h2>
+        <p class="section-subtitle">All plans include a 14-day free trial. No credit card required.</p>
+      </div>
+
+      <div class="pricing-toggle reveal">
+        <span class="active" data-period="monthly">Monthly</span>
+        <div class="toggle-switch" id="pricingToggle" role="button" tabindex="0" aria-label="Toggle annual pricing">
+          <div class="toggle-knob"></div>
+        </div>
+        <span data-period="annual">Annual</span>
+        <span class="toggle-save">Save 2 months</span>
+      </div>
+
+      <div class="pricing-grid">
+
+        <div class="pricing-card reveal reveal-delay-1">
+          <div class="tier-name">Starter</div>
+          <div class="price" data-monthly="$499" data-annual="$416">$499</div>
+          <div class="price-period" data-monthly="/mo" data-annual="/mo">/mo</div>
+          <div class="price-annual">$4,990 billed annually <span style="color:var(--text-muted);font-weight:400;">(save $998)</span></div>
+          <ul class="pricing-features">
+            <li>Up to 500 SKUs</li>
+            <li>AI product photography</li>
+            <li>Basic AI customer agent</li>
+            <li>Product description generation</li>
+            <li>Email support</li>
+            <li>Shopify / WooCommerce integration</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Start Free Trial</a>
+        </div>
+
+        <div class="pricing-card featured reveal reveal-delay-2">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="tier-name">Growth</div>
+          <div class="price" data-monthly="$1,499" data-annual="$1,249">$1,499</div>
+          <div class="price-period" data-monthly="/mo" data-annual="/mo">/mo</div>
+          <div class="price-annual">$14,990 billed annually <span style="color:var(--text-muted);font-weight:400;">(save $2,998)</span></div>
+          <ul class="pricing-features">
+            <li>Up to 5,000 SKUs</li>
+            <li>Advanced AI photography + video</li>
+            <li>24/7 AI customer agents (3 languages)</li>
+            <li>SEO content generation</li>
+            <li>Priority support</li>
+            <li>A+ content for Amazon</li>
+            <li>Analytics dashboard</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Start Free Trial</a>
+        </div>
+
+        <div class="pricing-card reveal reveal-delay-3">
+          <div class="tier-name">Scale</div>
+          <div class="price" data-monthly="$3,499" data-annual="$2,916">$3,499</div>
+          <div class="price-period" data-monthly="/mo" data-annual="/mo">/mo</div>
+          <div class="price-annual">$34,990 billed annually <span style="color:var(--text-muted);font-weight:400;">(save $6,998)</span></div>
+          <ul class="pricing-features">
+            <li>Unlimited SKUs</li>
+            <li>Full AI studio (photo + video + 3D)</li>
+            <li>Dedicated AI agents (10+ languages)</li>
+            <li>Multi-channel content engine</li>
+            <li>Dedicated account manager</li>
+            <li>Custom API access</li>
+            <li>White-label options</li>
+            <li>SLA guarantee</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Start Free Trial</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TESTIMONIALS
+  ========================================== -->
+  <section class="section" id="content" style="background: radial-gradient(ellipse at 50% 100%, rgba(0,206,201,0.04), transparent 60%);">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Testimonials</span>
+        <h2 class="section-title">Trusted by E-Commerce Leaders</h2>
+        <p class="section-subtitle">See how brands are transforming their operations with AETHER AI.</p>
+      </div>
+
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"We cut our product photography budget by 70% and launched 3x faster. The AI-generated lifestyle shots are indistinguishable from our studio work."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SK</div>
+            <div>
+              <div class="testimonial-name">Sarah Kim</div>
+              <div class="testimonial-role">CEO, Moda Collective</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"AETHER's AI agents handle 70% of our customer inquiries. Our CS team went from 12 people to 4, and satisfaction scores actually went up."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">MJ</div>
+            <div>
+              <div class="testimonial-name">Marcus Johnson</div>
+              <div class="testimonial-role">VP Operations, HomeStyle Goods</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal reveal-delay-3">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"The content engine alone saves us 40+ hours a week. Product descriptions that rank, blog posts that convert — it's like having a full marketing agency in-house."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">EL</div>
+            <div>
+              <div class="testimonial-name">Elena Liu</div>
+              <div class="testimonial-role">Head of Growth, Pura Vida Co.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FAQ
+  ========================================== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about getting started with AETHER AI.</p>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            How does AI product photography work?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Simply upload your product images or connect your catalog. Our AI analyzes each product and generates studio-quality photos in 120+ styles — white background, lifestyle, seasonal, editorial, and more. You can specify scenes, lighting, angles, and even generate videos. No photography equipment, studio rental, or retouching needed.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-1">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            How long does it take to set up?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Most stores are fully operational within 24 hours. The one-click Shopify / WooCommerce integration syncs your catalog in minutes. Our AI begins processing immediately — expect your first batch of generated assets within hours, not days.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-2">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            Who owns the generated content?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              You own 100% of all content generated through AETHER AI — images, videos, descriptions, and any other output. There are no watermarks, no attribution requirements, and no usage restrictions. Your content is yours to use anywhere, forever.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-3">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            Can I use my own brand guidelines?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Absolutely. During setup, you can upload your brand guide, color palette, fonts, voice guidelines, and reference images. Our AI learns your brand identity and generates content that stays consistent across every surface — from product photos to customer service responses.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-4">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            Does it work with my e-commerce platform?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes. AETHER AI integrates natively with Shopify, WooCommerce, BigCommerce, and Magento. We also offer API access for custom integrations and enterprise platforms. Our agents work directly inside your store admin — no clunky redirects or duplicate work.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal reveal-delay-5">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            Can I cancel anytime?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Yes — all plans are month-to-month with no long-term contracts. Cancel anytime from your dashboard, and you'll retain access until the end of your billing period. All content you've generated remains yours. For annual plans, we offer a 30-day money-back guarantee.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            What kind of support do you offer?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Starter plans include email support with same-day responses. Growth plans get priority support with live chat. Scale plans include a dedicated account manager and phone support. All plans have access to our knowledge base, documentation, and community forum.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open'));">
+            Is my data secure?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Security is a top priority. AETHER AI is SOC 2 Type II compliant. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We never share or sell your data, and your product images and customer information are isolated per tenant. We also offer GDPR compliance tools and SSO for enterprise plans.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       FOOTER
+  ========================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">AETHER AI</div>
+          <p>Replacing studios, agencies, and support teams with one AI-powered subscription. E-commerce automation for the modern era.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Twitter / X">𝕏</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="#" aria-label="GitHub">⌘</a>
+            <a href="#" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Visuals</a>
+          <a href="#">Agents</a>
+          <a href="#">Content</a>
+          <a href="#">Pricing</a>
+          <a href="#">Integrations</a>
+          <a href="#">API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+          <a href="#">Partners</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Documentation</a>
+          <a href="#">Help Center</a>
+          <a href="#">Community</a>
+          <a href="#">Status</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 AETHER AI, Inc. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       JAVASCRIPT
+  ========================================== -->
+  <script>
+    (function() {
+      'use strict';
+
+      /* ------------------------------------------
+         MOBILE HAMBURGER MENU
+      ------------------------------------------ */
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.querySelector('.mobile-menu');
+
+      if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', function() {
+          const isOpen = this.classList.toggle('active');
+          mobileMenu.classList.toggle('open');
+          this.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', function() {
+            hamburger.classList.remove('active');
+            mobileMenu.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      /* ------------------------------------------
+         FAQ ACCORDION
+         Note: Uses inline onclick on button elements
+      ------------------------------------------ */
+
+      /* ------------------------------------------
+         PRICING TOGGLE (Monthly / Annual)
+      ------------------------------------------ */
+      const toggleSwitch = document.getElementById('pricingToggle');
+      const toggleLabels = document.querySelectorAll('.pricing-toggle > span[data-period]');
+
+      if (toggleSwitch) {
+        function setPricing(isAnnual) {
+          const prices = document.querySelectorAll('.price');
+          const periods = document.querySelectorAll('.price-period');
+          const annualNotes = document.querySelectorAll('.price-annual');
+          const isActive = isAnnual;
+
+          prices.forEach(function(el) {
+            el.textContent = isActive ? el.dataset.annual : el.dataset.monthly;
+          });
+          periods.forEach(function(el) {
+            el.textContent = isActive ? el.dataset.annual : el.dataset.monthly;
+          });
+          annualNotes.forEach(function(el) {
+            el.classList.toggle('show', isActive);
+          });
+
+          toggleSwitch.classList.toggle('active', isActive);
+          toggleLabels.forEach(function(el) {
+            el.classList.toggle('active', el.dataset.period === (isActive ? 'annual' : 'monthly'));
+          });
+        }
+
+        toggleSwitch.addEventListener('click', function() {
+          setPricing(!this.classList.contains('active'));
+        });
+
+        toggleSwitch.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setPricing(!this.classList.contains('active'));
+          }
+        });
+
+        toggleLabels.forEach(function(label) {
+          label.addEventListener('click', function() {
+            setPricing(this.dataset.period === 'annual');
+          });
+        });
+      }
+
+      /* ------------------------------------------
+         SMOOTH SCROLL FOR NAV LINKS
+      ------------------------------------------ */
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          const target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            const navHeight = 72;
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      /* ------------------------------------------
+         SCROLL REVEAL ANIMATION
+      ------------------------------------------ */
+      function handleReveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        const windowHeight = window.innerHeight;
+        const revealThreshold = 60;
+
+        reveals.forEach(function(el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < windowHeight - revealThreshold) {
+            el.classList.add('visible');
+          }
+        });
+      }
+
+      // Run on load
+      window.addEventListener('load', handleReveal);
+      // Run on scroll
+      window.addEventListener('scroll', handleReveal, { passive: true });
+      // Run on resize
+      window.addEventListener('resize', handleReveal, { passive: true });
+      // Initial check in case content shifts
+      setTimeout(handleReveal, 300);
+
+      /* ------------------------------------------
+         NAVBAR BLUR ON SCROLL
+      ------------------------------------------ */
+      const nav = document.querySelector('.nav');
+      let lastScrollY = 0;
+
+      window.addEventListener('scroll', function() {
+        const scrollY = window.scrollY;
+        if (scrollY > 10) {
+          nav.style.borderBottomColor = 'rgba(30, 30, 48, 0.8)';
+        } else {
+          nav.style.borderBottomColor = '';
+        }
+        lastScrollY = scrollY;
+      }, { passive: true });
+
+    })();
+  </script>
+</body>
+</html>
