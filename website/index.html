@@ -1111,7 +1111,7 @@
 
       <div class="hero-ctas reveal reveal-delay-3">
         <a href="#pricing" class="btn btn-primary">Start Free Trial</a>
-        <a href="#" class="btn btn-secondary">See Demo →</a>
+        <a href="#" class="btn btn-secondary" onclick="openDemo(); return false;">Live Demo →</a>
       </div>
 
       <div class="hero-metrics reveal reveal-delay-4">
@@ -1672,5 +1672,208 @@
 
     })();
   </script>
+
+  <!-- ════════════════════════════════════════
+       PRIVATE DEMO MODAL
+  ════════════════════════════════════════ -->
+  <style>
+    .demo-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      z-index: 1000; display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .demo-overlay.active { display: flex; }
+    .demo-modal {
+      background: var(--bg-card); border: 1px solid var(--border-light);
+      border-radius: var(--radius); width: 100%; max-width: 720px;
+      max-height: 90vh; overflow-y: auto; padding: 32px;
+      box-shadow: var(--shadow-lg); animation: demoIn 0.25s ease-out;
+    }
+    @keyframes demoIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .demo-modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+    .demo-modal .demo-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-xs); }
+    .demo-modal .demo-close:hover { background: var(--bg-hover); color: var(--text); }
+    .demo-modal .demo-subtitle { color: var(--text-secondary); font-size: 13px; margin-bottom: 20px; }
+    .demo-modal .form-group { margin-bottom: 16px; }
+    .demo-modal .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .demo-modal input, .demo-modal textarea, .demo-modal select {
+      width: 100%; background: var(--bg-elevated); border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm); padding: 10px 12px; color: var(--text);
+      font-family: var(--font); font-size: 14px;
+    }
+    .demo-modal input:focus, .demo-modal textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-glow); }
+    .demo-modal textarea { min-height: 60px; resize: vertical; }
+    .demo-modal .style-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .demo-modal .style-tag {
+      padding: 6px 14px; background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer;
+      transition: all 0.15s; color: var(--text-secondary);
+    }
+    .demo-modal .style-tag:hover { border-color: var(--border-light); background: var(--bg-hover); }
+    .demo-modal .style-tag.active { background: rgba(108,92,231,0.15); border-color: var(--purple); color: var(--purple-light); }
+    .demo-btn {
+      width: 100%; padding: 12px; background: var(--gradient); border: none;
+      border-radius: var(--radius-sm); color: white; font-family: var(--font);
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .demo-btn:hover { opacity: 0.9; box-shadow: 0 6px 20px rgba(108,92,231,0.3); }
+    .demo-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+    .demo-result { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px; display: none; }
+    .demo-result.active { display: block; }
+    .demo-result img { width: 100%; border-radius: var(--radius-sm); }
+    .demo-result .demo-meta { font-size: 12px; color: var(--text-muted); margin-top: 8px; display: flex; gap: 12px; }
+    .demo-error { background: rgba(225,112,85,0.12); border: 1px solid rgba(225,112,85,0.25); border-radius: var(--radius-xs); padding: 10px; color: #e17055; font-size: 13px; margin-top: 12px; display: none; }
+    .demo-error.active { display: block; }
+    .demo-loading { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; }
+    .demo-spinner {
+      display: inline-block; width: 20px; height: 20px;
+      border: 2px solid var(--purple-glow); border-top-color: var(--purple);
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+      margin-right: 8px; vertical-align: middle;
+    }
+    .demo-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .demo-hint code { background: var(--bg-elevated); padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+    .demo-download-btn {
+      display: inline-block; margin-top: 8px; padding: 8px 16px;
+      background: var(--bg-elevated); border: 1px solid var(--border-light);
+      border-radius: var(--radius-xs); color: var(--text-secondary);
+      font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: all 0.15s;
+    }
+    .demo-download-btn:hover { background: var(--bg-hover); color: var(--text); }
+  </style>
+
+  <div class="demo-overlay" id="demoOverlay">
+    <div class="demo-modal">
+      <h2>
+        <span>🎬 Private Demo</span>
+        <button class="demo-close" onclick="closeDemo()">&times;</button>
+      </h2>
+      <p class="demo-subtitle">Test Aether AI image generation against your local API</p>
+
+      <div class="form-group">
+        <label>API URL</label>
+        <input type="text" id="demoApiUrl" value="http://localhost:8111" placeholder="http://localhost:8111">
+        <div class="demo-hint">Need to expose your local API? Use <a href="https://ngrok.com" target="_blank" style="color:var(--teal)">ngrok</a>: <code>ngrok http 8111</code></div>
+      </div>
+
+      <div class="form-group">
+        <label>Product Description</label>
+        <textarea id="demoDesc" placeholder="e.g. A matte black wireless mechanical keyboard with RGB backlighting, aluminum frame...">A matte black wireless mechanical keyboard with RGB backlighting</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Photography Style</label>
+        <div class="style-tags" id="demoStyles">
+          <span class="style-tag active" data-style="white_bg">⬜ White BG</span>
+          <span class="style-tag" data-style="studio">💡 Studio</span>
+          <span class="style-tag" data-style="lifestyle">🏠 Lifestyle</span>
+          <span class="style-tag" data-style="outdoor">🌿 Outdoor</span>
+          <span class="style-tag" data-style="automotive">🏎️ Automotive</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Seed (optional)</label>
+        <input type="number" id="demoSeed" placeholder="Random">
+      </div>
+
+      <div id="demoError" class="demo-error"></div>
+      <div id="demoLoading" class="demo-loading" style="display:none"><span class="demo-spinner"></span> Generating with Flux 2 Klein...</div>
+
+      <button class="demo-btn" id="demoBtn" onclick="runDemo()">Generate Photo</button>
+
+      <div id="demoResult" class="demo-result">
+        <img id="demoImage" src="" alt="Generated product photo">
+        <div class="demo-meta">
+          <span id="demoTime"></span>
+          <span id="demoSeedResult"></span>
+          <span id="demoStyleResult"></span>
+        </div>
+        <a id="demoDownload" class="demo-download-btn" download>⬇ Download PNG</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedStyle = 'white_bg';
+
+    document.querySelectorAll('#demoStyles .style-tag').forEach(tag => {
+      tag.addEventListener('click', function() {
+        document.querySelectorAll('#demoStyles .style-tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        selectedStyle = this.dataset.style;
+      });
+    });
+
+    function openDemo() { document.getElementById('demoOverlay').classList.add('active'); }
+    function closeDemo() { document.getElementById('demoOverlay').classList.remove('active'); }
+    document.getElementById('demoOverlay').addEventListener('click', function(e) { if (e.target === this) closeDemo(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDemo(); });
+
+    async function runDemo() {
+      const apiUrl = document.getElementById('demoApiUrl').value.replace(/\/+$/, '');
+      const desc = document.getElementById('demoDesc').value.trim();
+      const seed = document.getElementById('demoSeed').value;
+      const btn = document.getElementById('demoBtn');
+      const loading = document.getElementById('demoLoading');
+      const resultDiv = document.getElementById('demoResult');
+      const errorDiv = document.getElementById('demoError');
+
+      errorDiv.classList.remove('active');
+      errorDiv.textContent = '';
+      resultDiv.classList.remove('active');
+      loading.style.display = 'block';
+      btn.disabled = true;
+
+      if (!desc) { showDemoError('Please enter a product description.'); return; }
+
+      const body = JSON.stringify({
+        description: desc,
+        style: selectedStyle,
+        ...(seed ? { seed: parseInt(seed) } : {})
+      });
+
+      try {
+        const res = await fetch(apiUrl + '/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          showDemoError(data.detail || 'Generation failed (HTTP ' + res.status + ')');
+          return;
+        }
+
+        const imgUrl = apiUrl + data.image_url;
+        document.getElementById('demoImage').src = imgUrl;
+        document.getElementById('demoTime').textContent = '⏱ ' + data.elapsed_s + 's';
+        document.getElementById('demoSeedResult').textContent = '🎲 seed ' + data.seed;
+        const styleNames = { white_bg: 'White BG', studio: 'Studio', lifestyle: 'Lifestyle', outdoor: 'Outdoor', automotive: 'Automotive' };
+        document.getElementById('demoStyleResult').textContent = '📷 ' + (styleNames[data.style] || data.style);
+        document.getElementById('demoDownload').href = imgUrl;
+        document.getElementById('demoDownload').download = 'aether-' + data.style + '-' + data.seed + '.png';
+        resultDiv.classList.add('active');
+      } catch (e) {
+        showDemoError('Could not reach the API at <strong>' + apiUrl + '</strong>. Make sure the backend is running. ' +
+          '<br><br>Local users: start the API with <code style="background:var(--bg);padding:2px 6px;border-radius:3px;">cd ~/Documents/AetherAI && python app/backend/main.py</code>' +
+          '<br><br>Remote users: use <a href="https://ngrok.com" target="_blank" style="color:var(--teal)">ngrok http 8111</a> and paste the ngrok URL above.');
+      }
+
+      loading.style.display = 'none';
+      btn.disabled = false;
+    }
+
+    function showDemoError(msg) {
+      const e = document.getElementById('demoError');
+      e.innerHTML = msg;
+      e.classList.add('active');
+      document.getElementById('demoLoading').style.display = 'none';
+      document.getElementById('demoBtn').disabled = false;
+    }
+  </script>
+
 </body>
-</html>

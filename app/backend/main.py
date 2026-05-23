@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # Project paths
@@ -47,6 +48,8 @@ STYLES = {
     },
 }
 
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+
 app = FastAPI(title="AETHER AI API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
@@ -54,6 +57,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve React dashboard at root (SPA catch-all handled by index.html)
+if FRONTEND_DIST.exists():
+    app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIST / "assets")), name="assets")
 
 
 class GenerateRequest(BaseModel):
@@ -196,9 +203,30 @@ def health():
         return {"status": "ok", "comfyui_running": False, "error": str(e)}
 
 
+# ── SPA catch-all: serve React index.html for non-API routes ──
+from fastapi.responses import HTMLResponse
+
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    if full_path.startswith("api/"):
+        raise HTTPException(404)
+    if not FRONTEND_DIST.exists():
+        raise HTTPException(404, "Frontend not built. Run `npm run build` in app/frontend/")
+    index = FRONTEND_DIST / "index.html"
+    if not index.exists():
+        raise HTTPException(404)
+    return HTMLResponse(index.read_text(encoding="utf-8"))
+
+
 if __name__ == "__main__":
     import uvicorn
-    print(f"[AETHER] API starting on http://localhost:8111")
+    port = 8111
+    
+    if FRONTEND_DIST.exists():
+        print(f"[AETHER] Dashboard UI served at http://localhost:{port}")
+    
+    print(f"[AETHER] API starting on http://localhost:{port}")
     print(f"[AETHER] ComfyUI: {COMFY_API}")
     print(f"[AETHER] Styles available: {list(STYLES.keys())}")
-    uvicorn.run(app, host="127.0.0.1", port=8111)
+    uvicorn.run(app, host="127.0.0.1", port=port)
