@@ -1,0 +1,6 @@
+{
+  "rootDirectory": "website",
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "installCommand": null
+}
