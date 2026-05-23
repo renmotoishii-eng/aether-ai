@@ -19,11 +19,11 @@ if not os.path.exists(os.path.join(_COMFY_DIR, "output")):
     _COMFY_DIR = WORKFLOW_DIR  # fallback
 
 STYLE_MAP = {
-    "white_bg": "white_background",
-    "studio": "studio_lighting",
-    "lifestyle": "lifestyle",
-    "outdoor": "outdoor_natural",
-    "automotive": "automotive",
+    "white_bg": "klein_white_background",
+    "studio": "klein_studio_lighting",
+    "lifestyle": "klein_lifestyle",
+    "outdoor": "klein_outdoor_natural",
+    "automotive": "klein_automotive",
 }
 
 def generate(description, style="white_bg", seed=None, timeout=600):

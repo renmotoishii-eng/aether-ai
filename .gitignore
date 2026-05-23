@@ -1,0 +1,14 @@
+# Generated images are outputs, not source
+generated_images/
+*.png
+*.jpg
+*.jpeg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
