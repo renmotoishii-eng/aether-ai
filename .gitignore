@@ -4,6 +4,12 @@ generated_images/
 *.jpg
 *.jpeg
 
+# Node.js
+node_modules/
+
+# Build output
+dist/
+
 # OS
 .DS_Store
 Thumbs.db
