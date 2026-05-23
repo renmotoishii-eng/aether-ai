@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AETHER AI — Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a25;
+    --border: #2a2a3a;
+    --primary: #6c5ce7;
+    --primary-light: #a29bfe;
+    --accent: #00cec9;
+    --accent2: #fd79a8;
+    --gold: #fdcb6e;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+    --gradient2: linear-gradient(135deg, #fd79a8, #6c5ce7);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all;
+  }
+
+  .slide-content {
+    max-width: 1100px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .nav-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; background: var(--surface2); border-color: var(--border); }
+
+  .slide-counter {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .slide-progress {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    max-width: 500px;
+    margin: 0 24px;
+  }
+
+  .dot {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--primary); }
+  .dot.done { background: var(--primary-light); opacity: 0.5; }
+
+  /* Typography */
+  h1 {
+    font-size: 52px;
+    font-weight: 800;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+  .subtitle {
+    font-size: 20px;
+    color: var(--text-dim);
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 700px;
+  }
+  .highlight { color: var(--primary-light); }
+  .accent { color: var(--accent); }
+  .gold { color: var(--gold); }
+
+  /* Layout Helpers */
+  .flex-row { display: flex; gap: 24px; width: 100%; }
+  .flex-col { display: flex; flex-direction: column; }
+  .flex-1 { flex: 1; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .gap-16 { gap: 16px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mb-32 { margin-bottom: 32px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .w-full { width: 100%; }
+  .text-center { text-align: center; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s;
+  }
+  .card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,92,231,0.15); }
+  .card-icon { font-size: 32px; margin-bottom: 12px; }
+  .card h3 { font-size: 18px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
+
+  /* Metric Cards */
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+  }
+  .metric-value {
+    font-size: 36px;
+    font-weight: 800;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .metric-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* Stats rows */
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--text-dim); font-size: 15px; }
+  .stat-value { font-weight: 600; font-size: 15px; }
+
+  /* Table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  tr:hover td { background: var(--surface2); }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-purple { background: rgba(108,92,231,0.2); color: var(--primary-light); }
+  .tag-teal { background: rgba(0,206,201,0.2); color: var(--accent); }
+  .tag-pink { background: rgba(253,121,168,0.2); color: var(--accent2); }
+  .tag-gold { background: rgba(253,203,110,0.2); color: var(--gold); }
+
+  /* Title slide */
+  .title-slide {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  .title-slide h1 { font-size: 72px; margin-bottom: 24px; }
+  .title-slide .subtitle { font-size: 24px; margin: 0 auto; }
+  .title-slide .tagline {
+    font-size: 16px;
+    color: var(--text-dim);
+    margin-top: 40px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Gradient text utilities */
+  .gradient-text {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gradient-text2 {
+    background: var(--gradient2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Pill badges */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  /* Ask box */
+  .ask-box {
+    background: var(--gradient);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    margin-top: 24px;
+  }
+  .ask-box h3 { color: white; -webkit-text-fill-color: white; font-size: 28px; }
+  .ask-box p { color: rgba(255,255,255,0.8); font-size: 16px; margin-top: 8px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .slide { padding: 40px 32px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 28px; }
+    .title-slide h1 { font-size: 42px; }
+    .flex-row { flex-direction: column; }
+    .nav-bar { padding: 12px 16px; flex-wrap: wrap; }
+    .slide-progress { display: none; }
+  }
+
+  /* Animated glow */
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(108,92,231,0.1); }
+    50% { box-shadow: 0 0 40px rgba(108,92,231,0.3); }
+  }
+  .glow { animation: glow 3s ease-in-out infinite; }
+
+  /* Numbered list */
+  .numbered-list { counter-reset: item; list-style: none; }
+  .numbered-list li {
+    counter-increment: item;
+    padding: 12px 0 12px 44px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.5;
+    border-bottom: 1px solid var(--border);
+  }
+  .numbered-list li:last-child { border-bottom: none; }
+  .numbered-list li::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* Two column */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .benefit-list { list-style: none; }
+  .benefit-list li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .benefit-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--primary-light);
+    font-weight: 700;
+  }
+
+  .checkbox-list { list-style: none; }
+  .checkbox-list li {
+    padding: 8px 0 8px 32px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .checkbox-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+
+  .bullet-list { list-style: none; }
+  .bullet-list li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .bullet-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="presentation">
+  <div class="slide-container" id="slideContainer">
+
+    <!-- SLIDE 1: TITLE -->
+    <div class="slide active" data-slide="0">
+      <div class="slide-content title-slide">
+        <div class="tagline mb-16">Pitch Deck &bull; Pre-Seed &bull; May 2026</div>
+        <h1>AETHER AI</h1>
+        <div class="subtitle" style="max-width: 800px;">
+          AI Automation Suite for E-Commerce &amp; Retail<br>
+          <span style="font-size: 18px; color: var(--text-dim);">Product Photography &bull; Customer Service Agents &bull; Content Automation</span>
+        </div>
+        <div style="margin-top: 48px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <span class="pill" style="border-color: var(--primary);">$450K Seed Raise</span>
+          <span class="pill" style="border-color: var(--accent);">$3M Post-Money</span>
+          <span class="pill" style="border-color: var(--accent2);">15 Clients by M6</span>
+        </div>
+        <div style="margin-top: 60px; font-size: 14px; color: var(--text-dim);">
+          Aratz &bull; Long Beach, CA &bull; Confidential
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: THE PROBLEM -->
+    <div class="slide" data-slide="1">
+      <div class="slide-content">
+        <h4>The Problem</h4>
+        <h2>Mid-Market E-Commerce Is Stuck</h2>
+        <p class="subtitle mb-32">
+          Brands doing $2M–$50M/year face enterprise expectations without enterprise budgets.
+        </p>
+        <div class="flex-row" style="gap: 20px;">
+          <div class="card flex-1">
+            <div class="card-icon">📸</div>
+            <h3>Expensive Photography</h3>
+            <p>$50–$500 per SKU at traditional studios. A 200-SKU catalog costs $10K–$100K for photos alone. Most brands compromise on quality or skip images entirely.</p>
+          </div>
+          <div class="card flex-1">
+            <div class="card-icon">💬</div>
+            <h3>Overwhelmed Support</h3>
+            <p>30–40% of operational headcount goes to customer service. 55% of shoppers prefer messaging. Brands can't afford 24/7 multilingual support teams.</p>
+          </div>
+          <div class="card flex-1">
+            <div class="card-icon">✍️</div>
+            <h3>Content Crunch</h3>
+            <p>Brands selling across 3+ channels need product descriptions, SEO, and social content for every SKU in every marketplace. Most outsource at $50–200 per page.</p>
+          </div>
+        </div>
+        <div style="margin-top: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
+          <span style="font-weight: 700; color: var(--accent2);">The result:</span> Mid-market brands spend <strong style="color: var(--text);">$6K–$25K/month</strong> across these three cost centers, with no integrated solution to reduce them.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: THE SOLUTION -->
+    <div class="slide" data-slide="2">
+      <div class="slide-content">
+        <h4>The Solution</h4>
+        <h2>Three AI Products. One Platform.</h2>
+        <p class="subtitle mb-32">
+          Aether AI replaces three cost centers with one integrated subscription.
+        </p>
+        <div class="flex-row" style="gap: 20px;">
+          <div class="card flex-1" style="border-color: rgba(108,92,231,0.3);">
+            <div class="card-icon">🎨</div>
+            <span class="tag tag-purple mb-16">Product Line 1</span>
+            <h3>Aether Visuals</h3>
+            <p>AI product photography powered by ComfyUI + Flux. Studio-grade images in any setting, any angle. Background removal, lighting presets, and batch processing for 100–1,000+ SKUs.</p>
+            <div class="mt-16" style="background: var(--surface2); border-radius: 8px; padding: 12px; font-size: 13px;">
+              <strong style="color: var(--primary-light);">Real results:</strong> 60-80% cost reduction, 87% revenue uplift for adopters
+            </div>
+          </div>
+          <div class="card flex-1" style="border-color: rgba(0,206,201,0.3);">
+            <div class="card-icon">🤖</div>
+            <span class="tag tag-teal mb-16">Product Line 2</span>
+            <h3>Aether Agents</h3>
+            <p>24/7 AI customer service agents trained on your catalog, policies, and FAQ. Handles order tracking, returns, lead qualification, and multilingual support. Human handoff with full context.</p>
+            <div class="mt-16" style="background: var(--surface2); border-radius: 8px; padding: 12px; font-size: 13px;">
+              <strong style="color: var(--accent);">Savings:</strong> 80% reduction in support ticket volume
+            </div>
+          </div>
+          <div class="card flex-1" style="border-color: rgba(253,121,168,0.3);">
+            <div class="card-icon">📝</div>
+            <span class="tag tag-pink mb-16">Product Line 3</span>
+            <h3>Aether Content</h3>
+            <p>AI content engine generating SEO-optimized product descriptions, blog posts, social media captions, and multi-marketplace listings. 15 languages. Consistent brand voice across channels.</p>
+            <div class="mt-16" style="background: var(--surface2); border-radius: 8px; padding: 12px; font-size: 13px;">
+              <strong style="color: var(--accent2);">Savings:</strong> 10x faster content production at 90% lower cost
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: MARKET OPPORTUNITY -->
+    <div class="slide" data-slide="3">
+      <div class="slide-content">
+        <h4>Market Opportunity</h4>
+        <h2>$34 Billion TAM, Growing Fast</h2>
+        <p class="subtitle mb-24">
+          Three converging markets, one integrated platform.
+        </p>
+        <div class="flex-row mb-24" style="gap: 16px;">
+          <div class="metric-card">
+            <div class="metric-value">$1.81T</div>
+            <div class="metric-label">Global AI Market by 2030 (37.3% CAGR)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$34B</div>
+            <div class="metric-label">US TAM: Photo + Support + Content</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$5.1B</div>
+            <div class="metric-label">SAM: Mid-Market ($2M–$50M rev)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">14%</div>
+            <div class="metric-label">AI Adoption in Mid-Market (80% planning)</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Market Growth Rates</h3>
+            <div class="stat-row">
+              <span class="stat-label">AI Customer Service</span>
+              <span class="stat-value" style="color: var(--accent);">35% CAGR → $18.5B by 2030</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">AI Product Photography</span>
+              <span class="stat-value" style="color: var(--accent);">24.5% CAGR → $5B by 2035</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">AI Content Creation</span>
+              <span class="stat-value" style="color: var(--accent);">22% CAGR</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">E-Commerce Overall</span>
+              <span class="stat-value" style="color: var(--gold);">10% CAGR</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Key Trends</h3>
+            <ul class="bullet-list">
+              <li><strong>Visual commerce:</strong> Products with 3+ images convert 86% better. ASOS saw 340% conversion uplift from AI model imagery producing $127M in revenue.</li>
+              <li><strong>Adoption gap:</strong> 80% of execs plan AI adoption, only 14% have deployed — massive white space. AI photo editing is growing at 441%.</li>
+              <li><strong>Agentic AI maturity:</strong> 2025–2026 is the adoption year for enterprise; mid-market follows 2026–2027.</li>
+              <li><strong>Cost transformation:</strong> AI product photography delivers 60-80% cost reduction and 87% revenue uplift for adopters.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: TARGET CUSTOMER -->
+    <div class="slide" data-slide="4">
+      <div class="slide-content">
+        <h4>Target Customer</h4>
+        <h2>Mid-Market E-Commerce &amp; Automotive Parts</h2>
+        <p class="subtitle mb-24">
+          Two verticals with massive need, underserved by existing AI tools.
+        </p>
+        <div class="two-col">
+          <div class="card" style="border-color: rgba(108,92,231,0.3);">
+            <span class="tag tag-purple mb-16">Primary Vertical</span>
+            <h3 style="font-size: 18px;">E-Commerce Brands</h3>
+            <ul class="benefit-list">
+              <li>$2M–$50M annual online revenue</li>
+              <li>20–500 SKUs in catalog</li>
+              <li>2–15 employees in marketing/creative</li>
+              <li>Currently outsourcing photography ($50–500/SKU)</li>
+              <li>Shopify or WooCommerce stores</li>
+              <li>Spending $2K–$15K/month on content</li>
+              <li>Tech-savvy but no in-house AI team</li>
+            </ul>
+          </div>
+          <div class="card" style="border-color: rgba(253,121,168,0.3);">
+            <span class="tag tag-pink mb-16">Secondary Vertical</span>
+            <h3 style="font-size: 18px;">Automotive Parts &amp; Accessories</h3>
+            <ul class="benefit-list">
+              <li>High SKU counts (500–5,000+)</li>
+              <li>Complex specs needing accurate imagery</li>
+              <li>High customer service volume (fitment questions, returns)</li>
+              <li>Lower competitive AI tool intensity</li>
+              <li>Leverages founder's Oreka Motors expertise</li>
+              <li>Strong margins support SaaS investment</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; font-size: 14px; color: var(--text-dim);">
+          <strong style="color: var(--text);">~340,000 businesses</strong> in the US match our primary ICP
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: COMPETITIVE LANDSCAPE -->
+    <div class="slide" data-slide="5">
+      <div class="slide-content">
+        <h4>Competitive Landscape</h4>
+        <h2>Point Solutions vs. Integrated Platform</h2>
+        <p class="subtitle mb-24">No competitor offers visual + agents + content in one platform at mid-market prices.</p>
+        <table>
+          <tr>
+            <th>Feature</th>
+            <th style="color: var(--primary-light);">Aether AI</th>
+            <th>Pixelcut</th>
+            <th>Zendesk</th>
+            <th>Jasper</th>
+            <th>Canva</th>
+          </tr>
+          <tr>
+            <td>AI Product Photos</td>
+            <td style="color: var(--accent);">✅ Native</td>
+            <td>✅ Best</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>Basic</td>
+          </tr>
+          <tr>
+            <td>Product Descriptions</td>
+            <td style="color: var(--accent);">✅ Native</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>✅ Strong</td>
+            <td>Basic</td>
+          </tr>
+          <tr>
+            <td>Customer Service Agents</td>
+            <td style="color: var(--accent);">✅ Native</td>
+            <td>❌</td>
+            <td>✅ Best</td>
+            <td>❌</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Lead Qualification</td>
+            <td style="color: var(--accent);">✅ Native</td>
+            <td>❌</td>
+            <td>Add-on</td>
+            <td>❌</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Batch Processing</td>
+            <td style="color: var(--accent);">✅ Yes</td>
+            <td>❌</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td>Shopify Integration</td>
+            <td style="color: var(--accent);">✅ Deep</td>
+            <td>Basic</td>
+            <td>Basic</td>
+            <td>❌</td>
+            <td>Basic</td>
+          </tr>
+          <tr>
+            <td><strong>Mid-Month Price (approx.)</strong></td>
+            <td style="color: var(--accent); font-weight: 700;">$499–$3,499</td>
+            <td>$20–$200</td>
+            <td>$800–$15,000</td>
+            <td>$500–$3,000</td>
+            <td>$13–$500</td>
+          </tr>
+          <tr>
+            <td><strong>Mid-Market Fit</strong></td>
+            <td style="color: var(--accent); font-weight: 700;">✅ Perfect</td>
+            <td>Too basic</td>
+            <td>Too expensive</td>
+            <td>Not visual</td>
+            <td>Not specialized</td>
+          </tr>
+        </table>
+        <div style="margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-size: 14px; text-align: center;">
+          <strong>Key insight:</strong> Competitors are either <span class="highlight">too expensive for mid-market</span> (Zendesk), <span class="accent">too narrow</span> (Pixelcut, Canva), or <span class="gold">missing visual entirely</span> (Jasper, Copy.ai).
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: BUSINESS MODEL -->
+    <div class="slide" data-slide="6">
+      <div class="slide-content">
+        <h4>Business Model</h4>
+        <h2>Recurring SaaS + Usage Add-Ons</h2>
+        <p class="subtitle mb-24">Tiered subscriptions designed to grow with our clients.</p>
+        <div class="flex-row mb-24" style="gap: 16px;">
+          <div class="card flex-1" style="border-color: rgba(108,92,231,0.2);">
+            <span class="tag tag-purple mb-8">Starter</span>
+            <div style="font-size: 32px; font-weight: 800; margin-bottom: 4px;">$499</div>
+            <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px;">/month</div>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>50 product images/month</li>
+              <li>100 product descriptions</li>
+              <li>Basic FAQ agent</li>
+              <li>Best for &lt;50 SKU catalogs</li>
+            </ul>
+          </div>
+          <div class="card flex-1" style="border: 2px solid var(--primary); position: relative;">
+            <span class="tag tag-teal mb-8" style="position: absolute; top: -12px; right: 16px;">Most Popular</span>
+            <span class="tag tag-purple mb-8">Growth</span>
+            <div style="font-size: 32px; font-weight: 800; margin-bottom: 4px;">$1,499</div>
+            <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px;">/month</div>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>300 product images/month</li>
+              <li>500 product descriptions</li>
+              <li>Full agent suite (support, orders, FAQ)</li>
+              <li>Best for 50–300 SKU catalogs</li>
+            </ul>
+          </div>
+          <div class="card flex-1" style="border-color: rgba(253,121,168,0.2);">
+            <span class="tag tag-pink mb-8">Scale</span>
+            <div style="font-size: 32px; font-weight: 800; margin-bottom: 4px;">$3,499</div>
+            <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 16px;">/month</div>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>1,000 product images/month</li>
+              <li>2,000 product descriptions</li>
+              <li>Full suite + priority support</li>
+              <li>Best for 300+ SKU catalogs</li>
+            </ul>
+          </div>
+        </div>
+        <div class="flex-row" style="gap: 16px; font-size: 14px;">
+          <div class="card flex-1" style="padding: 16px;">
+            <strong style="color: var(--primary-light);">Blended ARPU:</strong> $1,200/mo
+          </div>
+          <div class="card flex-1" style="padding: 16px;">
+            <strong style="color: var(--accent);">Gross Margin:</strong> 72%
+          </div>
+          <div class="card flex-1" style="padding: 16px;">
+            <strong style="color: var(--accent2);">Add-On Rev:</strong> +15% (images, custom LoRA, API)
+          </div>
+          <div class="card flex-1" style="padding: 16px;">
+            <strong style="color: var(--gold);">Churn Target:</strong> &lt;3%/mo
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: UNIT ECONOMICS -->
+    <div class="slide" data-slide="7">
+      <div class="slide-content">
+        <h4>Unit Economics</h4>
+        <h2>Strong Foundational Metrics</h2>
+        <p class="subtitle mb-32">Capital-efficient unit economics with rapid payback.</p>
+        <div class="flex-row mb-24" style="gap: 20px;">
+          <div class="metric-card">
+            <div class="metric-value">$1,200</div>
+            <div class="metric-label">Blended ARPU (Monthly)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$864</div>
+            <div class="metric-label">Monthly Gross Profit Per Client</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$1,500</div>
+            <div class="metric-label">Customer Acquisition Cost</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">$28,800</div>
+            <div class="metric-label">Lifetime Value (24 mo)</div>
+          </div>
+        </div>
+        <div class="flex-row" style="gap: 20px;">
+          <div class="card flex-1">
+            <h3 class="mb-16" style="font-size: 18px;">LTV:CAC Ratio</h3>
+            <div style="font-size: 48px; font-weight: 800;" class="gradient-text">19.2:1</div>
+            <p style="margin-top: 8px; color: var(--text-dim); font-size: 14px;">Industry benchmark for great SaaS: &gt;5:1. We clear it by 4x.</p>
+          </div>
+          <div class="card flex-1">
+            <h3 class="mb-16" style="font-size: 18px;">Payback Period</h3>
+            <div style="font-size: 48px; font-weight: 800;" class="gradient-text2">1.3 mo</div>
+            <p style="margin-top: 8px; color: var(--text-dim); font-size: 14px;">CAC / Monthly Gross Profit. Client pays back acquisition cost in 5 weeks.</p>
+          </div>
+          <div class="card flex-1">
+            <h3 class="mb-16" style="font-size: 18px;">Cost Per Image</h3>
+            <div style="font-size: 48px; font-weight: 800;" class="gold" style="-webkit-text-fill-color: var(--gold);">$0.35</div>
+            <p style="margin-top: 8px; color: var(--text-dim); font-size: 14px;">vs. $50–$500 studio. 99.3% cost reduction for the client.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: GO-TO-MARKET -->
+    <div class="slide" data-slide="8">
+      <div class="slide-content">
+        <h4>Go-To-Market Strategy</h4>
+        <h2>Capital-Efficient Path to Scale</h2>
+        <p class="subtitle mb-24">Phased approach from founder-led sales to paid acquisition.</p>
+        <div class="flex-row" style="gap: 16px;">
+          <div class="card flex-1">
+            <span class="tag tag-purple mb-8">Phase 1: Months 1–6</span>
+            <h3 style="font-size: 16px;">Founder-Led Sales</h3>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>Personal network e-commerce outreach</li>
+              <li>Cold email to 2,500 Shopify stores</li>
+              <li>LA e-commerce meetups &amp; events</li>
+              <li>Shopify Experts directory listing</li>
+              <li>Design partner discount (50% off 3 mo)</li>
+            </ul>
+            <div style="margin-top: 12px; background: var(--surface2); border-radius: 8px; padding: 10px; font-size: 13px; text-align: center;">
+              Target: <strong>15 clients</strong> &bull; CAC: ~$50
+            </div>
+          </div>
+          <div class="card flex-1">
+            <span class="tag tag-teal mb-8">Phase 2: Months 7–12</span>
+            <h3 style="font-size: 16px;">Shopify + Content Engine</h3>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>Shopify App Store listing</li>
+              <li>SEO content (7–10 posts/mo)</li>
+              <li>Case studies from Phase 1 clients</li>
+              <li>E-commerce agency partnerships (15% referral)</li>
+              <li>YouTube tutorials</li>
+            </ul>
+            <div style="margin-top: 12px; background: var(--surface2); border-radius: 8px; padding: 10px; font-size: 13px; text-align: center;">
+              Target: <strong>50 total clients</strong> &bull; CAC: ~$100–$300
+            </div>
+          </div>
+          <div class="card flex-1">
+            <span class="tag tag-pink mb-8">Phase 3: Months 13+</span>
+            <h3 style="font-size: 16px;">Paid Acquisition + Team</h3>
+            <ul class="benefit-list" style="font-size: 13px;">
+              <li>Google Ads &amp; Meta Ads</li>
+              <li>Dedicated outbound SDR</li>
+              <li>Shopify Plus agency partnerships</li>
+              <li>Industry conferences (IRCE, Shopify Unite)</li>
+              <li>PR campaign: "$499 AI Studio"</li>
+            </ul>
+            <div style="margin-top: 12px; background: var(--surface2); border-radius: 8px; padding: 10px; font-size: 13px; text-align: center;">
+              Target: <strong>105+ clients</strong> &bull; CAC: ~$500–$1,200
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: TECHNOLOGY -->
+    <div class="slide" data-slide="9">
+      <div class="slide-content">
+        <h4>Technology</h4>
+        <h2>Proven Stack, Ready to Ship</h2>
+        <p class="subtitle mb-24">Built by a founder who can deliver the entire MVP solo.</p>
+        <div class="two-col">
+          <div class="card">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">AI &amp; Infrastructure Stack</h3>
+            <div class="stat-row">
+              <span class="stat-label">Image Generation</span>
+              <span class="stat-value">ComfyUI + Flux.1 Dev + SDXL</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Agent Framework</span>
+              <span class="stat-value">Custom orchestration (LangChain-free)</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">LLM Providers</span>
+              <span class="stat-value">Multi-provider routing</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Backend API</span>
+              <span class="stat-value">Node.js + Python FastAPI</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Frontend</span>
+              <span class="stat-value">React + Vite + Three.js</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Database</span>
+              <span class="stat-value">PostgreSQL + pgvector</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">E‑commerce Integration</span>
+              <span class="stat-value">Shopify, WooCommerce, BigCommerce</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Competitive Advantages</h3>
+            <ul class="numbered-list">
+              <li><strong>Fine-tuned Flux LoRAs</strong> per client catalog for consistent branding</li>
+              <li><strong>Multi-agent orchestration</strong> — agents escalate to each other across products</li>
+              <li><strong>Quality validation</strong> — every output checked before delivery; auto-regeneration</li>
+              <li><strong>Proven GPU pipeline</strong> — founder has working ComfyUI setup with Flux on RTX 4070</li>
+              <li><strong>MCP-native architecture</strong> — standardized tool calling, future-proof integration</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; font-size: 14px;">
+          <strong style="color: var(--accent);">Already built:</strong> ComfyUI automotive workflow, Flux FP8 pipeline, Hermes Agent framework — core AI infrastructure exists today.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: PRODUCT ROADMAP -->
+    <div class="slide" data-slide="10">
+      <div class="slide-content">
+        <h4>Product Roadmap</h4>
+        <h2>12 Months to Full Platform</h2>
+        <p class="subtitle mb-24">Phased rollout starting with highest-value product line.</p>
+        <div class="flex-row" style="gap: 16px;">
+          <div class="card flex-1">
+            <span class="tag tag-purple mb-8">Months 1–3</span>
+            <h3 style="font-size: 16px;">Aether Visuals MVP</h3>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>ComfyUI product photography pipeline</li>
+              <li>Background removal &amp; lighting presets</li>
+              <li>Batch processing (100+ SKUs)</li>
+              <li>5 studio lighting presets</li>
+              <li>Web upload → generate → download</li>
+            </ul>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--accent);">5 design partners @ $499/mo</div>
+          </div>
+          <div class="card flex-1">
+            <span class="tag tag-teal mb-8">Months 4–6</span>
+            <h3 style="font-size: 16px;">Aether Content Launch</h3>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>Product description generation</li>
+              <li>SEO metadata generation</li>
+              <li>Multi-marketplace optimization</li>
+              <li>Shopify direct integration (app)</li>
+              <li>Usage analytics dashboard</li>
+            </ul>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--accent);">15 paying clients</div>
+          </div>
+          <div class="card flex-1">
+            <span class="tag tag-pink mb-8">Months 7–9</span>
+            <h3 style="font-size: 16px;">Aether Agents + Scale</h3>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>Customer service agent (FAQ, policies)</li>
+              <li>Order tracking &amp; returns agent</li>
+              <li>Lead qualification agent</li>
+              <li>Human handoff with context</li>
+              <li>Self-serve onboarding</li>
+            </ul>
+            <div style="margin-top: 12px; font-size: 13px; color: var(--accent);">30 clients, full platform</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: FINANCIAL FORECAST -->
+    <div class="slide" data-slide="11">
+      <div class="slide-content">
+        <h4>Financial Forecast</h4>
+        <h2>Strong Growth, Attractive Margins</h2>
+        <p class="subtitle mb-24">Capital-efficient path to $3.8M ARR by Year 5.</p>
+        <div class="flex-row mb-24" style="gap: 16px;">
+          <div class="metric-card">
+            <div class="metric-value" style="font-size: 28px;">$180K</div>
+            <div class="metric-label">Year 1 Revenue</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" style="font-size: 28px;">$1.38M</div>
+            <div class="metric-label">Year 3 Revenue</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" style="font-size: 28px;">$3.8M</div>
+            <div class="metric-label">Year 5 Revenue</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" style="font-size: 28px;">74%</div>
+            <div class="metric-label">Gross Margin (Year 5)</div>
+          </div>
+        </div>
+        <table>
+          <tr>
+            <th>Metric</th>
+            <th>Year 1</th>
+            <th>Year 2</th>
+            <th>Year 3</th>
+            <th>Year 4</th>
+            <th>Year 5</th>
+          </tr>
+          <tr>
+            <td>Clients (EOP)</td>
+            <td>30</td>
+            <td>45</td>
+            <td>105</td>
+            <td>190</td>
+            <td>280</td>
+          </tr>
+          <tr>
+            <td>Revenue</td>
+            <td>$180K</td>
+            <td>$540K</td>
+            <td>$1.38M</td>
+            <td>$2.50M</td>
+            <td>$3.80M</td>
+          </tr>
+          <tr>
+            <td>COGS</td>
+            <td>$54K</td>
+            <td>$151K</td>
+            <td>$373K</td>
+            <td>$675K</td>
+            <td>$988K</td>
+          </tr>
+          <tr>
+            <td>Gross Profit</td>
+            <td>$126K</td>
+            <td>$389K</td>
+            <td>$1.01M</td>
+            <td>$1.83M</td>
+            <td>$2.81M</td>
+          </tr>
+          <tr>
+            <td><strong>Gross Margin</strong></td>
+            <td><strong>70%</strong></td>
+            <td><strong>72%</strong></td>
+            <td><strong>73%</strong></td>
+            <td><strong>73%</strong></td>
+            <td><strong>74%</strong></td>
+          </tr>
+          <tr>
+            <td>OpEx</td>
+            <td>$186K</td>
+            <td>$308K</td>
+            <td>$580K</td>
+            <td>$1.02M</td>
+            <td>$1.58M</td>
+          </tr>
+          <tr>
+            <td><strong>EBITDA</strong></td>
+            <td><strong>-$60K</strong></td>
+            <td><strong>$81K</strong></td>
+            <td><strong>$427K</strong></td>
+            <td><strong>$805K</strong></td>
+            <td><strong>$1.23M</strong></td>
+          </tr>
+          <tr>
+            <td><strong>EBITDA Margin</strong></td>
+            <td><strong>-33%</strong></td>
+            <td><strong>15%</strong></td>
+            <td><strong>31%</strong></td>
+            <td><strong>32%</strong></td>
+            <td><strong>32%</strong></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: MONTHLY PATH TO BREAKEVEN -->
+    <div class="slide" data-slide="12">
+      <div class="slide-content">
+        <h4>Path to Breakeven</h4>
+        <h2>Breakeven at Month 14</h2>
+        <p class="subtitle mb-24">Conservative monthly model — $450K seed funds 18 months of runway.</p>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px;">
+          <div style="display: flex; gap: 32px; align-items: flex-end; height: 180px; padding: 0 8px;">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="height: 40px; border-radius: 4px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="height: 100%; background: linear-gradient(to top, var(--accent2), #fd79a8); border-radius: 4px 4px 0 0; transition: all 0.3s;"></div>
+              </div>
+              <span style="font-size: 10px; color: var(--text-dim);">M1</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="height: 40px; border-radius: 4px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="height: 30%; background: linear-gradient(to top, var(--accent2), #fd79a8); border-radius: 4px 4px 0 0;"></div>
+              </div>
+              <span style="font-size: 10px; color: var(--text-dim);">M3</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="height: 40px; border-radius: 4px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="height: 60%; background: linear-gradient(to top, var(--accent), #00cec9); border-radius: 4px 4px 0 0;"></div>
+              </div>
+              <span style="font-size: 10px; color: var(--text-dim);">M6</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="height: 40px; border-radius: 4px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="height: 80%; background: linear-gradient(to top, var(--primary-light), #a29bfe); border-radius: 4px 4px 0 0;"></div>
+              </div>
+              <span style="font-size: 10px; color: var(--text-dim);">M9</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="height: 40px; border-radius: 4px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end;">
+                <div style="height: 100%; background: linear-gradient(to top, var(--primary), #6c5ce7); border-radius: 4px 4px 0 0;"></div>
+              </div>
+              <span style="font-size: 10px; color: var(--text-dim);">M12</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; padding: 0 8px;">
+            <span style="font-size: 10px; color: var(--text-dim);">-$7,280</span>
+            <span style="font-size: 10px; color: var(--accent2);">-$4,050</span>
+            <span style="font-size: 10px; color: var(--accent);">+$330</span>
+            <span style="font-size: 10px; color: var(--primary-light);">+$1,520</span>
+            <span style="font-size: 10px; color: var(--primary);">+$8,090</span>
+          </div>
+        </div>
+        <div class="flex-row" style="gap: 16px;">
+          <div class="card flex-1">
+            <div style="font-size: 28px; font-weight: 800; color: var(--accent);">$450K</div>
+            <div style="font-size: 14px; color: var(--text-dim);">Seed Raise</div>
+          </div>
+          <div class="card flex-1">
+            <div style="font-size: 28px; font-weight: 800; color: var(--primary-light);">18 months</div>
+            <div style="font-size: 14px; color: var(--text-dim);">Runway from seed</div>
+          </div>
+          <div class="card flex-1">
+            <div style="font-size: 28px; font-weight: 800; color: var(--accent2);">30 clients</div>
+            <div style="font-size: 14px; color: var(--text-dim);">At breakeven</div>
+          </div>
+          <div class="card flex-1">
+            <div style="font-size: 28px; font-weight: 800; color: var(--gold);">$33K</div>
+            <div style="font-size: 14px; color: var(--text-dim);">MRR at breakeven</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: USE OF FUNDS -->
+    <div class="slide" data-slide="13">
+      <div class="slide-content">
+        <h4>Use of Funds</h4>
+        <h2>$450,000 Allocation</h2>
+        <p class="subtitle mb-24">Conservative, high-leverage deployment.</p>
+        <div class="two-col">
+          <div>
+            <div style="position: relative; width: 300px; height: 300px; margin: 0 auto;">
+              <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border)" stroke-width="14"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#6c5ce7" stroke-width="14"
+                  stroke-dasharray="251.2" stroke-dashoffset="0"
+                  style="stroke-dashoffset: calc(251.2 - 251.2 * 0.30);"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#00cec9" stroke-width="14"
+                  stroke-dasharray="251.2" stroke-dashoffset="0"
+                  style="stroke-dashoffset: calc(251.2 - 251.2 * 0.40); transform-origin: center; transform: rotate(calc(360 * 0.30deg));"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#a29bfe" stroke-width="14"
+                  stroke-dasharray="251.2" stroke-dashoffset="0"
+                  style="stroke-dashoffset: calc(251.2 - 251.2 * 0.20); transform-origin: center; transform: rotate(calc(360 * 0.70deg));"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#fdcb6e" stroke-width="14"
+                  stroke-dasharray="251.2" stroke-dashoffset="0"
+                  style="stroke-dashoffset: calc(251.2 - 251.2 * 0.10); transform-origin: center; transform: rotate(calc(360 * 0.90deg));"/>
+              </svg>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <div style="font-size: 28px; font-weight: 800; color: var(--text);">$450K</div>
+                <div style="font-size: 11px; color: var(--text-dim);">Seed Round</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="stat-row">
+              <span class="stat-label">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #6c5ce7; margin-right: 8px;"></span>
+                Sales &amp; Marketing
+              </span>
+              <span class="stat-value" style="color: #6c5ce7;">$180K (40%)</span>
+            </div>
+            <div class="stat-row" style="border-bottom: none;">
+              <div style="font-size: 13px; color: var(--text-dim); padding: 4px 0 12px 18px;">
+                Shopify App Store ads, Google Ads, content marketing ($2K/mo), SDR hire ($50K), agency partnerships
+              </div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #00cec9; margin-right: 8px;"></span>
+                Product Development
+              </span>
+              <span class="stat-value" style="color: #00cec9;">$135K (30%)</span>
+            </div>
+            <div class="stat-row" style="border-bottom: none;">
+              <div style="font-size: 13px; color: var(--text-dim); padding: 4px 0 12px 18px;">
+                Full-stack dev, ComfyUI pipeline optimization, Shopify app, AI agents, MCP servers
+              </div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #a29bfe; margin-right: 8px;"></span>
+                Infrastructure &amp; Ops
+              </span>
+              <span class="stat-value" style="color: #a29bfe;">$90K (20%)</span>
+            </div>
+            <div class="stat-row" style="border-bottom: none;">
+              <div style="font-size: 13px; color: var(--text-dim); padding: 4px 0 12px 18px;">
+                Cloud GPU compute ($4K–$8K/mo), API costs, hosting, tools, monitoring
+              </div>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #fdcb6e; margin-right: 8px;"></span>
+                Legal + Working Capital
+              </span>
+              <span class="stat-value" style="color: #fdcb6e;">$45K (10%)</span>
+            </div>
+            <div class="stat-row" style="border-bottom: none;">
+              <div style="font-size: 13px; color: var(--text-dim); padding: 4px 0 12px 18px;">
+                Delaware C-Corp, IP protection, TOS, SOC2 readiness, contingency buffer
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15: TRACTION PLAN -->
+    <div class="slide" data-slide="14">
+      <div class="slide-content">
+        <h4>Milestones</h4>
+        <h2>12-Month Traction Plan</h2>
+        <p class="subtitle mb-24">Clear milestones from incorporation to 30 clients.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="tag tag-purple">Month -2 to 0</span>
+              <span style="font-size: 12px; color: var(--text-dim);">NOW</span>
+            </div>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>Incorporate as Delaware C-Corp</li>
+              <li>Build Aether Visuals MVP</li>
+              <li>Recruit 2 design partner clients</li>
+              <li>Create brand identity &amp; landing page</li>
+              <li>Open SAFE round ($50K angels)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="tag tag-teal mb-8">Months 1–6</span>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>Close $450K seed round</li>
+              <li>Launch Aether Visuals (Month 2)</li>
+              <li>Onboard 5 design partners (Month 3)</li>
+              <li>Launch Aether Content (Month 4)</li>
+              <li>Reach 15 clients, $15K MRR (Month 6)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="tag tag-pink mb-8">Months 7–12</span>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>Launch Aether Agents (Month 8)</li>
+              <li>30 clients, $33K MRR (Month 12)</li>
+              <li>Breakeven (Month 14)</li>
+              <li>Shopify App Store live (Month 7)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="tag tag-gold mb-8">Months 13–18</span>
+            <ul class="checkbox-list" style="font-size: 13px;">
+              <li>45 clients, $49.5K MRR</li>
+              <li>$500K ARR</li>
+              <li>Hire SDR + first engineer</li>
+              <li>Series A preparation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 16: FOUNDER -->
+    <div class="slide" data-slide="15">
+      <div class="slide-content">
+        <h4>The Founder</h4>
+        <h2>Founder-Led Execution</h2>
+        <p class="subtitle mb-24">A founder who can build the entire product and close the first 30 deals.</p>
+        <div class="flex-row" style="gap: 24px;">
+          <div class="card flex-1">
+            <div style="font-size: 48px; margin-bottom: 16px;">👨‍💻</div>
+            <h3 style="font-size: 20px; margin-bottom: 4px;">Aratz</h3>
+            <div style="color: var(--text-dim); font-size: 14px; margin-bottom: 16px;">CEO &amp; Product Lead</div>
+            <div style="background: var(--surface2); border-radius: 8px; padding: 16px;">
+              <div class="stat-row" style="font-size: 13px;">
+                <span class="stat-label">Current</span>
+                <span class="stat-value">CEO, Oreka Motors (EV startup)</span>
+              </div>
+              <div class="stat-row" style="font-size: 13px;">
+                <span class="stat-label">Stack</span>
+                <span class="stat-value">Full-stack AI + React + ComfyUI</span>
+              </div>
+              <div class="stat-row" style="font-size: 13px;">
+                <span class="stat-label">Framework</span>
+                <span class="stat-value">Built Hermes Agent AI framework</span>
+              </div>
+              <div class="stat-row" style="font-size: 13px;">
+                <span class="stat-label">Network</span>
+                <span class="stat-value">LA/OC e-commerce &amp; automotive</span>
+              </div>
+              <div class="stat-row" style="font-size: 13px; border: none;">
+                <span class="stat-label">Domain</span>
+                <span class="stat-value">E-commerce + automotive + AI</span>
+              </div>
+            </div>
+          </div>
+          <div class="card flex-1">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Why This Founder Wins</h3>
+            <ul class="numbered-list">
+              <li><strong>Full-stack capability</strong> — Can build ComfyUI pipelines, LLM orchestration, React frontends, and Shopify integrations solo. MVP costs = $0 in engineering labor.</li>
+              <li><strong>Proven execution</strong> — Leading Oreka Motors (hardware + software) demonstrates cross-functional product leadership.</li>
+              <li><strong>Capital efficiency</strong> — Built working AI infrastructure (ComfyUI, Flux, Hermes Agent) without institutional funding.</li>
+              <li><strong>Domain depth</strong> — Understands both e-commerce and automotive verticals intimately.</li>
+              <li><strong>Sales-ready</strong> — Existing network in LA/OC business community; can close first 15 clients through relationships.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 17: RISK & MITIGATION -->
+    <div class="slide" data-slide="16">
+      <div class="slide-content">
+        <h4>Risk Analysis</h4>
+        <h2>Known Risks, Mitigated</h2>
+        <p class="subtitle mb-24">We've stress-tested the key failure modes.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="card" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <strong style="font-size: 14px;">Image quality fails expectations</strong>
+              <span class="tag tag-gold" style="font-size: 11px;">Medium Risk</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim);">Design partner feedback loop; continuous Flux LoRA fine-tuning; human-in-the-loop validation for first 3 months</p>
+          </div>
+          <div class="card" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <strong style="font-size: 14px;">LLM API cost inflation</strong>
+              <span class="tag tag-teal" style="font-size: 11px;">Medium Risk</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim);">Multi-provider routing for cheapest option; local models (DeepSeek, Llama) for frequent tasks; auto-scaling spot instances</p>
+          </div>
+          <div class="card" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <strong style="font-size: 14px;">Slower-than-projected acquisition</strong>
+              <span class="tag tag-gold" style="font-size: 11px;">High Probability</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim);">Cash reserve built into seed; can reduce burn rate; pivot to higher-touch/higher-value clients; extend runway</p>
+          </div>
+          <div class="card" style="padding: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <strong style="font-size: 14px;">Competitor launches integrated solution</strong>
+              <span class="tag tag-teal" style="font-size: 11px;">Medium Risk</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-dim);">Speed to market (6-month head start); vertical depth > horizontal breadth; brand moat through quality; proprietary LoRAs</p>
+          </div>
+        </div>
+        <div style="margin-top: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
+          <h3 style="font-size: 16px; margin-bottom: 8px;">🛡️ Defensibility Moat</h3>
+          <div class="flex-row" style="gap: 16px; font-size: 13px;">
+            <div class="flex-1"><strong>Data moat:</strong> Fine-tuned model per client creates switching costs</div>
+            <div class="flex-1"><strong>Integration depth:</strong> Deep Shopify/WooCommerce bindings hard to replicate</div>
+            <div class="flex-1"><strong>Quality edge:</strong> Proprietary Flux LoRAs beat generic tools</div>
+            <div class="flex-1"><strong>Brand inertia:</strong> 500+ images + 200+ descriptions = migration pain</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 18: THE ASK -->
+    <div class="slide" data-slide="17">
+      <div class="slide-content">
+        <h4>The Ask</h4>
+        <h2>Join the Aether AI Mission</h2>
+        <p class="subtitle mb-24" style="max-width: 800px; margin: 0 auto 32px; text-align: center;">
+          We're raising a <strong>$450,000 seed round</strong> to make enterprise-grade AI automation accessible to every mid-market e-commerce brand.
+        </p>
+        <div class="ask-box glow">
+          <h3>$450,000 at $3M Post-Money (15%)</h3>
+          <p>Y Combinator SAFE with MFN or Priced Seed Round</p>
+          <p style="margin-top: 16px;">Minimum check: $25,000 &bull; Lead investor target: Micro VC / Angel Syndicate</p>
+          <div style="margin-top: 24px; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+            <div style="text-align: center;">
+              <div style="font-size: 24px; font-weight: 800; color: white;">30%</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.7);">to Product</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 24px; font-weight: 800; color: white;">40%</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.7);">to Go-to-Market</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 24px; font-weight: 800; color: white;">20%</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.7);">to Infra &amp; Ops</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 24px; font-weight: 800; color: white;">10%</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.7);">to Legal + Reserve</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 24px; display: flex; justify-content: center; gap: 48px; text-align: center;">
+          <div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--text);">18 months</div>
+            <div style="font-size: 13px; color: var(--text-dim);">Runway</div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--text);">$3.8M</div>
+            <div style="font-size: 13px; color: var(--text-dim);">Projected Y5 Revenue</div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--text);">74%</div>
+            <div style="font-size: 13px; color: var(--text-dim);">Gross Margin (Y5)</div>
+          </div>
+          <div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--text);">32%</div>
+            <div style="font-size: 13px; color: var(--text-dim);">EBITDA Margin (Y5)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 19: CONTACT -->
+    <div class="slide" data-slide="18">
+      <div class="slide-content title-slide">
+        <h1 style="font-size: 56px;">Thank You</h1>
+        <div style="margin-top: 24px; font-size: 20px; color: var(--text); font-weight: 500;">
+          Let's democratize e-commerce AI together.
+        </div>
+        <div style="margin-top: 48px; padding: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; max-width: 500px; margin-left: auto; margin-right: auto;">
+          <div style="font-size: 16px; color: var(--text-dim); margin-bottom: 8px;">Aratz, CEO &amp; Founder</div>
+          <div style="font-size: 14px; color: var(--text-dim); margin-bottom: 4px;">📧 aratz@aether-ai.com</div>
+          <div style="font-size: 14px; color: var(--text-dim);">📍 Long Beach, CA</div>
+        </div>
+        <div style="margin-top: 32px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <span class="pill">Aether Visuals ✅</span>
+          <span class="pill">Aether Agents ✅</span>
+          <span class="pill">Aether Content ✅</span>
+        </div>
+        <div style="margin-top: 48px; font-size: 12px; color: var(--text-dim);">
+          Confidential &bull; May 2026 &bull; Pre-Seed Round
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <div style="font-weight: 700; color: var(--primary-light); font-size: 14px;">AETHER AI</div>
+    <div class="slide-progress" id="progressDots"></div>
+    <div class="nav-controls">
+      <button class="nav-btn" id="prevBtn" disabled>← Prev</button>
+      <span class="slide-counter" id="slideCounter">1 / 19</span>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+      <button class="nav-btn" id="fullscreenBtn" style="margin-left: 8px;">⛶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 0;
+
+  function goToSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    slides.forEach((s, i) => s.classList.toggle('active', i === index));
+    currentSlide = index;
+    updateNav();
+  }
+
+  function updateNav() {
+    document.getElementById('prevBtn').disabled = currentSlide === 0;
+    document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+    document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${totalSlides}`;
+    document.querySelectorAll('.dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentSlide);
+      dot.classList.toggle('done', i < currentSlide);
+    });
+  }
+
+  function buildProgress() {
+    const container = document.getElementById('progressDots');
+    container.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => goToSlide(i));
+      container.appendChild(dot);
+    }
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => goToSlide(currentSlide - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => goToSlide(currentSlide + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goToSlide(currentSlide + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goToSlide(currentSlide - 1);
+    }
+  });
+
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.querySelector('.presentation').requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(currentSlide + 1);
+      else goToSlide(currentSlide - 1);
+    }
+  });
+
+  buildProgress();
+  updateNav();
+</script>
+</body>
+</html>

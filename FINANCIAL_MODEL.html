@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AETHER AI — Financial Model</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a25;
+    --border: #2a2a3a;
+    --primary: #6c5ce7;
+    --primary-light: #a29bfe;
+    --accent: #00cec9;
+    --accent2: #fd79a8;
+    --gold: #fdcb6e;
+    --green: #00b894;
+    --red: #e17055;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  h1 { font-size: 36px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 16px; margin-top: 32px; }
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  .subtitle { color: var(--text-dim); font-size: 14px; margin-bottom: 24px; }
+
+  .header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .meta { text-align: right; font-size: 13px; color: var(--text-dim); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .metric .value { font-size: 28px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .metric .value.red { background: linear-gradient(135deg, var(--red), #e17055); -webkit-background-clip: text; }
+  .metric .value.green { background: linear-gradient(135deg, var(--green), #00b894); -webkit-background-clip: text; }
+  .metric .label { font-size: 12px; color: var(--text-dim); margin-top: 6px; font-weight: 500; }
+  .metric .sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  th {
+    text-align: right;
+    padding: 10px 14px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+  th:first-child { text-align: left; }
+  td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+  }
+  td:first-child {
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: var(--text);
+  }
+  tr:hover td { background: var(--surface2); }
+  .highlight-row td { background: rgba(108,92,231,0.08); font-weight: 600; }
+  .highlight-row td:first-child { color: var(--primary-light); }
+  .positive { color: var(--green); }
+  .negative { color: var(--red); }
+
+  .section-header td {
+    background: var(--surface2);
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+  .section-header td:first-child { color: var(--text); }
+
+  .controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+  .control-group { display: flex; align-items: center; gap: 8px; }
+  .control-group label { font-size: 13px; color: var(--text-dim); }
+  .control-group input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    width: 80px;
+    text-align: center;
+  }
+  .control-group input:focus { outline: none; border-color: var(--primary); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-purple { background: rgba(108,92,231,0.2); color: var(--primary-light); }
+  .tag-teal { background: rgba(0,206,201,0.2); color: var(--accent); }
+  .tag-pink { background: rgba(253,121,168,0.2); color: var(--accent2); }
+  .tag-gold { background: rgba(253,203,110,0.2); color: var(--gold); }
+  .tag-green { background: rgba(0,184,148,0.2); color: var(--green); }
+  .tag-red { background: rgba(225,112,85,0.2); color: var(--red); }
+
+  @media (max-width: 900px) {
+    body { padding: 16px; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .header { flex-direction: column; }
+    .meta { text-align: left; margin-top: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>AETHER AI — Financial Model</h1>
+    <div class="subtitle">5-Year Projections &bull; Interactive Sensitivity Analysis &bull; Seed Round Model</div>
+  </div>
+  <div class="meta">
+    <div>Prepared: May 2026</div>
+    <div>Round: Seed ($450K)</div>
+    <div class="tag tag-purple" style="margin-top: 4px;">Conservative Assumptions</div>
+  </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="grid-4">
+  <div class="metric">
+    <div class="value">$3.8M</div>
+    <div class="label">Year 5 Revenue</div>
+    <div class="sub">280 clients @ $1,250/mo avg</div>
+  </div>
+  <div class="metric">
+    <div class="value green">32%</div>
+    <div class="label">EBITDA Margin (Y5)</div>
+    <div class="sub">$1.23M operating profit</div>
+  </div>
+  <div class="metric">
+    <div class="value">74%</div>
+    <div class="label">Gross Margin (Y5)</div>
+    <div class="sub">Infrastructure + API costs</div>
+  </div>
+  <div class="metric">
+    <div class="value green">19.2x</div>
+    <div class="label">LTV:CAC Ratio</div>
+    <div class="sub">$28.8K LTV / $1.5K CAC</div>
+  </div>
+</div>
+
+<div class="grid-4">
+  <div class="metric">
+    <div class="value" style="font-size: 22px;">Month 14</div>
+    <div class="label">Breakeven Point</div>
+    <div class="sub">~30 clients needed</div>
+  </div>
+  <div class="metric">
+    <div class="value" style="font-size: 22px;">$1,200</div>
+    <div class="label">Blended ARPU</div>
+    <div class="sub">Across all 3 tiers</div>
+  </div>
+  <div class="metric">
+    <div class="value" style="font-size: 22px;">18 mo</div>
+    <div class="label">Seed Runway</div>
+    <div class="sub">$25K/mo avg burn rate</div>
+  </div>
+  <div class="metric">
+    <div class="value green" style="font-size: 22px;">$1.23M</div>
+    <div class="label">Y5 EBITDA</div>
+    <div class="sub">Before interest &amp; taxes</div>
+  </div>
+</div>
+
+<!-- ASSUMPTIONS -->
+<h2>Key Assumptions</h2>
+<div class="card">
+  <div class="grid-3">
+    <div>
+      <h3>Client Growth</h3>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Start (M1)</span>
+        <span class="stat-value">2 clients</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">New/mo (M1-3)</span>
+        <span class="stat-value">1-2/mo</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">New/mo (M4-6)</span>
+        <span class="stat-value">2-3/mo</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">New/mo (M7-12)</span>
+        <span class="stat-value">3-4/mo</span>
+      </div>
+    </div>
+    <div>
+      <h3>Pricing &amp; Costs</h3>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Starter Tier</span>
+        <span class="stat-value">$499/mo</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Growth Tier</span>
+        <span class="stat-value">$1,499/mo</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Scale Tier</span>
+        <span class="stat-value">$3,499/mo</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">COGS %</span>
+        <span class="stat-value">28% of revenue</span>
+      </div>
+    </div>
+    <div>
+      <h3>Churn &amp; Retention</h3>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Monthly churn (Y1)</span>
+        <span class="stat-value">4%</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Monthly churn (Y2+)</span>
+        <span class="stat-value">3%</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Avg retention</span>
+        <span class="stat-value">24 months</span>
+      </div>
+      <div class="stat-row" style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span class="stat-label" style="color: var(--text-dim);">Net dollar retention</span>
+        <span class="stat-value">110%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YEAR 1 MONTHLY -->
+<h2>Year 1 — Monthly Detail</h2>
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>New Clients</th>
+      <th>Churned</th>
+      <th>Total Clients</th>
+      <th>MRR</th>
+      <th>COGS</th>
+      <th>Gross Profit</th>
+      <th>OpEx</th>
+      <th>Net Income</th>
+      <th>Cumulative</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Month 1</td><td>2</td><td>0</td><td>2</td><td>$1,000</td><td>$280</td><td>$720</td><td class="negative">$8,000</td><td class="negative">-$7,280</td><td class="negative">-$7,280</td></tr>
+    <tr><td>Month 2</td><td>2</td><td>0</td><td>4</td><td>$3,000</td><td>$840</td><td>$2,160</td><td class="negative">$10,000</td><td class="negative">-$7,840</td><td class="negative">-$15,120</td></tr>
+    <tr><td>Month 3</td><td>2</td><td>1</td><td>5</td><td>$5,000</td><td>$1,400</td><td>$3,600</td><td class="negative">$12,000</td><td class="negative">-$8,400</td><td class="negative">-$23,520</td></tr>
+    <tr><td>Month 4</td><td>3</td><td>1</td><td>7</td><td>$8,000</td><td>$2,240</td><td>$5,760</td><td class="negative">$13,000</td><td class="negative">-$7,240</td><td class="negative">-$30,760</td></tr>
+    <tr><td>Month 5</td><td>3</td><td>1</td><td>9</td><td>$11,000</td><td>$3,080</td><td>$7,920</td><td class="negative">$14,000</td><td class="negative">-$6,080</td><td class="negative">-$36,840</td></tr>
+    <tr><td>Month 6</td><td>3</td><td>0</td><td>12</td><td>$15,000</td><td>$4,200</td><td>$10,800</td><td class="negative">$15,000</td><td class="negative">-$4,200</td><td class="negative">-$41,040</td></tr>
+    <tr><td>Month 7</td><td>3</td><td>0</td><td>15</td><td>$18,000</td><td>$5,040</td><td>$12,960</td><td class="negative">$15,000</td><td class="negative">-$2,040</td><td class="negative">-$43,080</td></tr>
+    <tr><td>Month 8</td><td>3</td><td>0</td><td>18</td><td>$21,000</td><td>$5,880</td><td>$15,120</td><td class="negative">$15,000</td><td class="positive">$120</td><td class="negative">-$42,960</td></tr>
+    <tr class="highlight-row"><td>Month 9</td><td>3</td><td>0</td><td>21</td><td>$24,000</td><td>$6,720</td><td>$17,280</td><td class="negative">$16,000</td><td class="positive">$1,280</td><td class="negative">-$41,680</td></tr>
+    <tr><td>Month 10</td><td>3</td><td>0</td><td>24</td><td>$27,000</td><td>$7,560</td><td>$19,440</td><td class="negative">$16,000</td><td class="positive">$3,440</td><td class="negative">-$38,240</td></tr>
+    <tr><td>Month 11</td><td>3</td><td>0</td><td>27</td><td>$30,000</td><td>$8,400</td><td>$21,600</td><td class="negative">$16,000</td><td class="positive">$5,600</td><td class="negative">-$32,640</td></tr>
+    <tr class="highlight-row"><td>Month 12</td><td>3</td><td>0</td><td>30</td><td>$33,000</td><td>$9,240</td><td>$23,760</td><td class="negative">$16,000</td><td class="positive">$7,760</td><td class="negative">-$24,880</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- 5-YEAR P&L -->
+<h2>5-Year Profit &amp; Loss</h2>
+<div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th style="min-width: 200px;">Line Item</th>
+      <th>Year 1</th>
+      <th>Year 2</th>
+      <th>Year 3</th>
+      <th>Year 4</th>
+      <th>Year 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="section-header"><td colspan="6">Revenue</td></tr>
+    <tr>
+      <td>Clients (End of Period)</td>
+      <td>30</td>
+      <td>60</td>
+      <td>130</td>
+      <td>220</td>
+      <td>310</td>
+    </tr>
+    <tr>
+      <td>Blended ARPU</td>
+      <td>$1,000</td>
+      <td>$1,100</td>
+      <td>$1,150</td>
+      <td>$1,200</td>
+      <td>$1,250</td>
+    </tr>
+    <tr>
+      <td>Subscription Revenue</td>
+      <td>$180,000</td>
+      <td>$540,000</td>
+      <td>$1,380,000</td>
+      <td>$2,500,000</td>
+      <td>$3,800,000</td>
+    </tr>
+    <tr>
+      <td>Add-On Revenue (10%)</td>
+      <td>$18,000</td>
+      <td>$54,000</td>
+      <td>$138,000</td>
+      <td>$250,000</td>
+      <td>$380,000</td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Total Revenue</strong></td>
+      <td><strong>$198,000</strong></td>
+      <td><strong>$594,000</strong></td>
+      <td><strong>$1,518,000</strong></td>
+      <td><strong>$2,750,000</strong></td>
+      <td><strong>$4,180,000</strong></td>
+    </tr>
+
+    <tr class="section-header"><td colspan="6">Cost of Goods Sold</td></tr>
+    <tr><td>GPU Compute &amp; API Costs</td><td>$54,000</td><td>$151,200</td><td>$372,600</td><td>$675,000</td><td>$988,000</td></tr>
+    <tr><td>Hosting &amp; Infrastructure</td><td>$5,400</td><td>$16,200</td><td>$37,260</td><td>$60,000</td><td>$80,000</td></tr>
+    <tr class="highlight-row">
+      <td><strong>Total COGS</strong></td>
+      <td><strong>$59,400</strong></td>
+      <td><strong>$167,400</strong></td>
+      <td><strong>$409,860</strong></td>
+      <td><strong>$735,000</strong></td>
+      <td><strong>$1,068,000</strong></td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Gross Profit</strong></td>
+      <td><strong>$138,600</strong></td>
+      <td><strong>$426,600</strong></td>
+      <td><strong>$1,108,140</strong></td>
+      <td><strong>$2,015,000</strong></td>
+      <td><strong>$3,112,000</strong></td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Gross Margin</strong></td>
+      <td><strong>70%</strong></td>
+      <td><strong>72%</strong></td>
+      <td><strong>73%</strong></td>
+      <td><strong>73%</strong></td>
+      <td><strong>74%</strong></td>
+    </tr>
+
+    <tr class="section-header"><td colspan="6">Operating Expenses</td></tr>
+    <tr><td>R&amp;D / Engineering</td><td>$90,000</td><td>$140,000</td><td>$300,000</td><td>$550,000</td><td>$900,000</td></tr>
+    <tr><td>Sales &amp; Marketing</td><td>$60,000</td><td>$120,000</td><td>$200,000</td><td>$350,000</td><td>$500,000</td></tr>
+    <tr><td>General &amp; Administrative</td><td>$36,000</td><td>$48,000</td><td>$80,000</td><td>$120,000</td><td>$180,000</td></tr>
+    <tr class="highlight-row">
+      <td><strong>Total OpEx</strong></td>
+      <td><strong>$186,000</strong></td>
+      <td><strong>$308,000</strong></td>
+      <td><strong>$580,000</strong></td>
+      <td><strong>$1,020,000</strong></td>
+      <td><strong>$1,580,000</strong></td>
+    </tr>
+
+    <tr class="section-header"><td colspan="6">Profitability</td></tr>
+    <tr class="highlight-row">
+      <td><strong>EBITDA</strong></td>
+      <td class="negative"><strong>-$47,400</strong></td>
+      <td class="positive"><strong>$118,600</strong></td>
+      <td class="positive"><strong>$528,140</strong></td>
+      <td class="positive"><strong>$995,000</strong></td>
+      <td class="positive"><strong>$1,532,000</strong></td>
+    </tr>
+    <tr>
+      <td>EBITDA Margin</td>
+      <td class="negative">-24%</td>
+      <td class="positive">20%</td>
+      <td class="positive">35%</td>
+      <td class="positive">36%</td>
+      <td class="positive">37%</td>
+    </tr>
+    <tr>
+      <td>Depreciation &amp; Amortization</td>
+      <td>$12,000</td>
+      <td>$18,000</td>
+      <td>$25,000</td>
+      <td>$35,000</td>
+      <td>$50,000</td>
+    </tr>
+    <tr>
+      <td>Interest Expense</td>
+      <td>$5,000</td>
+      <td>$5,000</td>
+      <td>$4,000</td>
+      <td>$2,000</td>
+      <td>$0</td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Pre-Tax Income</strong></td>
+      <td class="negative"><strong>-$64,400</strong></td>
+      <td class="positive"><strong>$95,600</strong></td>
+      <td class="positive"><strong>$499,140</strong></td>
+      <td class="positive"><strong>$958,000</strong></td>
+      <td class="positive"><strong>$1,482,000</strong></td>
+    </tr>
+    <tr>
+      <td>Tax (21%)</td>
+      <td>$0</td>
+      <td>$20,076</td>
+      <td>$104,819</td>
+      <td>$201,180</td>
+      <td>$311,220</td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Net Income</strong></td>
+      <td class="negative"><strong>-$64,400</strong></td>
+      <td class="positive"><strong>$75,524</strong></td>
+      <td class="positive"><strong>$394,321</strong></td>
+      <td class="positive"><strong>$756,820</strong></td>
+      <td class="positive"><strong>$1,170,780</strong></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- CASH FLOW -->
+<h2>Cash Flow &amp; Burn Analysis</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>Seed Funding &amp; Runway</h3>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Seed Round</span>
+      <span style="font-weight: 700; color: var(--accent);">$450,000</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Y1 Net Burn</span>
+      <span style="font-weight: 700;" class="negative">-$64,400</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Peak Cash Need</span>
+      <span style="font-weight: 700; color: var(--gold);">$87,000</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Cash at Breakeven (M14)</span>
+      <span style="font-weight: 700; color: var(--green);">$362,000</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+      <span style="color: var(--text-dim);">Cash at Y5</span>
+      <span style="font-weight: 700; color: var(--green);">$4,100,000</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Unit Economics Deep Dive</h3>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">CAC (blended Y1)</span>
+      <span style="font-weight: 700;">$1,500</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">ARPU (blended)</span>
+      <span style="font-weight: 700; color: var(--accent);">$1,200/mo</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Gross Profit/Client/mo</span>
+      <span style="font-weight: 700; color: var(--green);">$864</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+      <span style="color: var(--text-dim);">Months to Recover CAC</span>
+      <span style="font-weight: 700; color: var(--green);">1.3 months</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+      <span style="color: var(--text-dim);">LTV (24 mo retention)</span>
+      <span style="font-weight: 700; color: var(--primary-light);">$28,800</span>
+    </div>
+  </div>
+</div>
+
+<!-- SENSITIVITY MATRIX -->
+<h2>Sensitivity Analysis — Impact of Key Variables on Y5 Revenue</h2>
+<div class="card">
+  <div class="grid-3">
+    <div>
+      <h3>Monthly New Client Rate</h3>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Conservative (base)</span>
+        <span>3-5/mo → <strong style="color: var(--gold);">$3.8M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Bull case (+25%)</span>
+        <span>4-6/mo → <strong style="color: var(--green);">$5.2M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span style="color: var(--text-dim);">Bear case (-25%)</span>
+        <span>2-4/mo → <strong style="color: var(--red);">$2.6M</strong></span>
+      </div>
+    </div>
+    <div>
+      <h3>Monthly Churn Rate</h3>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Conservative (3%)</span>
+        <span>→ <strong style="color: var(--gold);">$3.8M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Strong retention (2%)</span>
+        <span>→ <strong style="color: var(--green);">$5.8M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span style="color: var(--text-dim);">High churn (5%)</span>
+        <span>→ <strong style="color: var(--red);">$1.9M</strong></span>
+      </div>
+    </div>
+    <div>
+      <h3>ARPU Growth</h3>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Base (5%/yr growth)</span>
+        <span>→ <strong style="color: var(--gold);">$3.8M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+        <span style="color: var(--text-dim);">Aggressive upsell (10%)</span>
+        <span>→ <strong style="color: var(--green);">$4.6M</strong></span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;">
+        <span style="color: var(--text-dim);">Flat ARPU (0%)</span>
+        <span>→ <strong style="color: var(--red);">$3.2M</strong></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VALUATION SCENARIOS -->
+<h2>Valuation Projections &amp; Exit Scenarios</h2>
+<div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Year 3</th>
+      <th>Year 5</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ARR</td>
+      <td>$1.52M</td>
+      <td>$4.18M</td>
+      <td>Annual recurring revenue</td>
+    </tr>
+    <tr>
+      <td>Revenue Growth</td>
+      <td>155% YoY</td>
+      <td>52% YoY</td>
+      <td>Strong SaaS growth rates</td>
+    </tr>
+    <tr>
+      <td>Implied Valuation (10x ARR)</td>
+      <td>$15.2M</td>
+      <td>$41.8M</td>
+      <td>Conservative SaaS multiple</td>
+    </tr>
+    <tr>
+      <td>Implied Valuation (15x ARR)</td>
+      <td>$22.8M</td>
+      <td>$62.7M</td>
+      <td>Strong growth multiple</td>
+    </tr>
+    <tr>
+      <td>Multiple on Invested Capital</td>
+      <td>34x – 51x</td>
+      <td>93x – 139x</td>
+      <td>vs. $450K seed</td>
+    </tr>
+    <tr>
+      <td>Series A Target</td>
+      <td colspan="2">$2.5M at $15-20M pre (Month 18-24)</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- FUNDING ALLOCATION -->
+<h2>Seed Round Use of Funds ($450,000)</h2>
+<div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Amount</th>
+      <th>%</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sales &amp; Marketing</td>
+      <td>$180,000</td>
+      <td>40%</td>
+      <td>Shopify App Store ads, Google Ads ($2K/mo M13+), content marketing, SDR hire ($50K)</td>
+    </tr>
+    <tr>
+      <td>Product Development</td>
+      <td>$135,000</td>
+      <td>30%</td>
+      <td>Full-stack dev, ComfyUI pipeline optimization, Shopify app, AI agents, MCP servers</td>
+    </tr>
+    <tr>
+      <td>Infrastructure &amp; Operations</td>
+      <td>$90,000</td>
+      <td>20%</td>
+      <td>Cloud GPU compute ($4K-8K/mo), API costs, hosting, tools, monitoring</td>
+    </tr>
+    <tr>
+      <td>Legal &amp; Compliance</td>
+      <td>$22,500</td>
+      <td>5%</td>
+      <td>Delaware C-Corp, IP protection, TOS, privacy policy, SOC2 readiness</td>
+    </tr>
+    <tr>
+      <td>Working Capital Reserve</td>
+      <td>$22,500</td>
+      <td>5%</td>
+      <td>Contingency buffer, slower growth insurance, equipment</td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Total</strong></td>
+      <td><strong>$450,000</strong></td>
+      <td><strong>100%</strong></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- TEAM COST PROJECTION -->
+<h2>Team Cost Projection</h2>
+<div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Hire Month</th>
+      <th>Salary (Annual)</th>
+      <th>Year 1 Cost</th>
+      <th>Year 2 Cost</th>
+      <th>Year 3 Cost</th>
+      <th>Year 4 Cost</th>
+      <th>Year 5 Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Founder (CEO)</td>
+      <td>M1</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+      <td>$80,000</td>
+      <td>$120,000</td>
+      <td>$150,000</td>
+      <td>$180,000</td>
+    </tr>
+    <tr>
+      <td>Contract AI Engineer</td>
+      <td>M1</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+      <td>$60,000</td>
+    </tr>
+    <tr>
+      <td>Part-time BD / Sales</td>
+      <td>M6</td>
+      <td>$40,000</td>
+      <td>$20,000</td>
+      <td>$40,000</td>
+      <td>$50,000</td>
+      <td>$60,000</td>
+      <td>$70,000</td>
+    </tr>
+    <tr>
+      <td>Full-stack Engineer</td>
+      <td>M9</td>
+      <td>$110,000</td>
+      <td>$30,000</td>
+      <td>$110,000</td>
+      <td>$110,000</td>
+      <td>$120,000</td>
+      <td>$130,000</td>
+    </tr>
+    <tr>
+      <td>Customer Success</td>
+      <td>M12</td>
+      <td>$65,000</td>
+      <td>$0</td>
+      <td>$65,000</td>
+      <td>$65,000</td>
+      <td>$75,000</td>
+      <td>$85,000</td>
+    </tr>
+    <tr>
+      <td>Outbound SDR</td>
+      <td>M13</td>
+      <td>$50,000</td>
+      <td>$0</td>
+      <td>$50,000</td>
+      <td>$60,000</td>
+      <td>$70,000</td>
+      <td>$80,000</td>
+    </tr>
+    <tr>
+      <td>Senior Engineer</td>
+      <td>M18</td>
+      <td>$150,000</td>
+      <td>$0</td>
+      <td>$40,000</td>
+      <td>$150,000</td>
+      <td>$160,000</td>
+      <td>$170,000</td>
+    </tr>
+    <tr>
+      <td>AI/ML Engineer</td>
+      <td>M24</td>
+      <td>$140,000</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$40,000</td>
+      <td>$140,000</td>
+      <td>$150,000</td>
+    </tr>
+    <tr>
+      <td>Sales Lead</td>
+      <td>M24</td>
+      <td>$100,000</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$30,000</td>
+      <td>$100,000</td>
+      <td>$110,000</td>
+    </tr>
+    <tr>
+      <td>Marketing Manager</td>
+      <td>M30</td>
+      <td>$85,000</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$85,000</td>
+      <td>$85,000</td>
+    </tr>
+    <tr>
+      <td>Operations Manager</td>
+      <td>M36</td>
+      <td>$80,000</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$0</td>
+      <td>$80,000</td>
+    </tr>
+    <tr class="highlight-row">
+      <td><strong>Total Team Cost</strong></td>
+      <td></td>
+      <td></td>
+      <td><strong>$170,000</strong></td>
+      <td><strong>$445,000</strong></td>
+      <td><strong>$685,000</strong></td>
+      <td><strong>$1,020,000</strong></td>
+      <td><strong>$1,200,000</strong></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- KEY METRICS TABLE -->
+<h2>Operating Metrics Summary</h2>
+<div style="overflow-x: auto; border: 1px solid var(--border); border-radius: 12px;">
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Year 1</th>
+      <th>Year 2</th>
+      <th>Year 3</th>
+      <th>Year 4</th>
+      <th>Year 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="section-header"><td colspan="6">Scale Metrics</td></tr>
+    <tr><td>Ending Clients</td><td>30</td><td>60</td><td>130</td><td>220</td><td>310</td></tr>
+    <tr><td>New Clients Added</td><td>32</td><td>40</td><td>84</td><td>108</td><td>120</td></tr>
+    <tr><td>Churned Clients</td><td>2</td><td>10</td><td>14</td><td>18</td><td>30</td></tr>
+    <tr><td>Net Adds</td><td>30</td><td>30</td><td>70</td><td>90</td><td>90</td></tr>
+    <tr><td>Avg Clients (annual)</td><td>15</td><td>45</td><td>95</td><td>175</td><td>265</td></tr>
+
+    <tr class="section-header"><td colspan="6">Revenue Metrics</td></tr>
+    <tr><td>Avg MRR</td><td>$15,000</td><td>$49,500</td><td>$109,250</td><td>$210,000</td><td>$331,250</td></tr>
+    <tr><td>Year-end ARR</td><td>$198,000</td><td>$594,000</td><td>$1,518,000</td><td>$2,750,000</td><td>$4,180,000</td></tr>
+    <tr><td>Rev per Employee</td><td>$59,400</td><td>$84,857</td><td>$151,800</td><td>$229,167</td><td>$298,571</td></tr>
+    <tr><td>Net Dollar Retention</td><td>110%</td><td>110%</td><td>110%</td><td>110%</td><td>110%</td></tr>
+
+    <tr class="section-header"><td colspan="6">Efficiency Metrics</td></tr>
+    <tr><td>Gross Margin</td><td>70%</td><td>72%</td><td>73%</td><td>73%</td><td>74%</td></tr>
+    <tr><td>EBITDA Margin</td><td>-24%</td><td>20%</td><td>35%</td><td>36%</td><td>37%</td></tr>
+    <tr><td>Net Margin</td><td>-33%</td><td>13%</td><td>26%</td><td>28%</td><td>28%</td></tr>
+    <tr><td>Magic Number (CAC efficiency)</td><td>0.8x</td><td>0.9x</td><td>1.0x</td><td>1.0x</td><td>1.1x</td></tr>
+
+    <tr class="section-header"><td colspan="6">Cash &amp; Funding</td></tr>
+    <tr><td>Cash from Operations</td><td>-$64,400</td><td>$95,600</td><td>$499,140</td><td>$958,000</td><td>$1,482,000</td></tr>
+    <tr><td>Cumulative Cash Flow</td><td>$385,600</td><td>$481,200</td><td>$980,340</td><td>$1,938,340</td><td>$3,420,340</td></tr>
+    <tr><td>Funding Raised</td><td>$450,000</td><td>$0</td><td>$2,500,000</td><td>$0</td><td>$0</td></tr>
+    <tr><td>Cash Balance (EOY)</td><td>$385,600</td><td>$481,200</td><td>$3,480,340</td><td>$5,418,340</td><td>$8,838,340</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div style="margin-top: 32px; padding: 24px; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border); text-align: center;">
+  <p style="color: var(--text-dim); font-size: 14px;">
+    This financial model is prepared for the AETHER AI seed raise of <strong style="color: var(--text);">$450,000</strong>.
+    All projections are based on reasonable assumptions and should be validated against real market data during the design partner phase.
+  </p>
+  <p style="color: var(--text-dim); font-size: 13px; margin-top: 12px;">
+    AETHER AI &bull; Confidential &bull; May 2026
+  </p>
+</div>
+
+</body>
+</html>
